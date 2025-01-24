@@ -1,38 +1,49 @@
 .App {
   text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  background-color: #f9f9f9;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  max-width: 900px;
+  padding: 20px;
+  background: #ffffff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  width: 100%;
 }
 
-.App-link {
-  color: #61dafb;
+h1 {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 20px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.calculator-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: auto;
+  text-align: center;
+}
+
+.calculator-table th, .calculator-table td {
+  padding: 12px;
+  border: 1px solid #ddd;
+}
+
+.calculator-table th {
+  background-color: #f2f2f2;
+}
+
+.calculator-table td {
+  background-color: #fafafa;
+}
+
+.calculator-table tr:hover td {
+  background-color: #f1f1f1;
 }
