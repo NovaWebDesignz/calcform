@@ -11,3 +11,39 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+select {
+  padding: 12px; /* Increase padding for better height */
+  font-size: 16px; /* Make text more readable */
+  line-height: 2; /* Increase line height */
+  border-radius: 6px; /* Optional: Rounded corners */
+  border: 1px solid #ccc;
+}
+
+option {
+  padding: 10px; /* Add space inside options */
+  line-height: 2.5; /* Increase height between lines */
+  font-size: 16px;
+}
+.dropdown-container {
+  position: relative; /* Ensures absolute positioning is relative to this */
+  display: inline-block; /* Keeps it compact */
+}
+
+.dropdown-select {
+  width: 100%; /* Ensures it fits within its parent */
+  padding: 10px; /* Adjust spacing */
+}
+
+.dropdown-options {
+  position: absolute;
+  top: 100%; /* Positions below the select box */
+  left: 0;
+  width: 100%;
+  background: white;
+  border: 1px solid #ddd;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 10; /* Keeps it above other content */
+  max-height: 200px; /* Prevents excessive height */
+  overflow-y: auto; /* Enables scrolling */
+}
