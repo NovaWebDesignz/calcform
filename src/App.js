@@ -61,11 +61,11 @@ function App() {
                       onChange={(e) => handleOptionChange(index, e.target.value)}
                     >
                       <option value="">Select Calculation</option>
-                      <option value="Slabs">Slabs, Square Footings, or Walls</option>
-                      <option value="Holes">Hole, Column, or Round Footings</option>
-                      <option value="Circular">Circular Slab or Tube</option>
-                      <option value="Curb">Curb and Gutter Barrier</option>
-                      <option value="Stairs">Stairs</option>
+                      <option value="slabs">Slabs, Square Footings, or Walls</option>
+                      <option value="holes">Hole, Column, or Round Footings</option>
+                      <option value="circular">Circular Slab or Tube</option>
+                      <option value="curb">Curb and Gutter Barrier</option>
+                      <option value="stairs">Stairs</option>
                     </select>
                   </div>
                 </td>
