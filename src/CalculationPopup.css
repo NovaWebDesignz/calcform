@@ -6,21 +6,24 @@
   height: 100%;
   background: rgba(0, 0, 0, 0.5);
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
 }
 
 .popup {
   background: white;
   padding: 20px;
-  border-radius: 8px;
-  width: 300px;
+  border-radius: 10px;
+  width: 400px; /* Adjust width as needed */
+  text-align: center; /* Center the text inside the popup */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
-
 .popup input {
   width: 100%;
   padding: 8px;
-  margin: 5px 0;
+  margin: 10px 0;
 }
 
 .popup button {
@@ -32,4 +35,46 @@
   color: white;
   border: none;
   cursor: pointer;
+}
+.input-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.input-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px; /* Space between input and select */
+  width: 100%;
+}
+
+.input-container input {
+  width: 150px;
+  padding: 8px;
+  text-align: center;
+}
+
+.input-container select {
+  width: 100px;
+  padding: 8px;
+  cursor: pointer;
+  text-align: center;
+}
+
+button {
+  margin-top: 15px;
+  padding: 10px 20px;
+  border: none;
+  background: #007bff;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #0056b3;
 }
