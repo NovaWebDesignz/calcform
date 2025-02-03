@@ -1,28 +1,31 @@
 import React, { useState } from "react";
 import "./App.css";
+import CalculationPopup from "./CalculationPopup";
 
 function App() {
-  // State to track the number of rows visible
+  // State variables
   const [visibleRows, setVisibleRows] = useState(0);
   const [selectedOptions, setSelectedOptions] = useState([]);
+  const [popupOption, setPopupOption] = useState(null);
 
-  // Logic to add one row per click
+  // Add a row
   const handleAddRow = () => {
-    setVisibleRows(visibleRows + 1); // Increment the number of rows displayed
-    setSelectedOptions([...selectedOptions, ""]); // Add an empty value for the new row
+    setVisibleRows((prev) => prev + 1);
+    setSelectedOptions([...selectedOptions, ""]);
   };
 
-  // Logic to remove the last row
+  // Remove a row
   const handleRemoveRow = (index) => {
-    setVisibleRows(visibleRows - 1); // Decrease the number of rows displayed
-    setSelectedOptions(selectedOptions.filter((_, i) => i !== index)); // Remove the corresponding option
+    setVisibleRows((prev) => prev - 1);
+    setSelectedOptions(selectedOptions.filter((_, i) => i !== index));
   };
 
-  // Handle option change for each row
+  // Handle dropdown selection
   const handleOptionChange = (index, value) => {
-    const newSelectedOptions = [...selectedOptions];
-    newSelectedOptions[index] = value; // Update the specific row's selected option
-    setSelectedOptions(newSelectedOptions);
+    const newOptions = [...selectedOptions];
+    newOptions[index] = value;
+    setSelectedOptions(newOptions);
+    setPopupOption(value); // Always update state in a non-conditional manner
   };
 
   return (
@@ -46,11 +49,11 @@ function App() {
           <tbody>
             {[...Array(visibleRows)].map((_, index) => (
               <tr key={index}>
-                <td> {/* Add a button to remove the row */}
+                <td>
                   <button onClick={() => handleRemoveRow(index)}>-</button>
                 </td>
-                <td>{index + 1}</td> {/* Display the row number */}
-                <td> {/* Add a dropdown to select the calculation type */}
+                <td>{index + 1}</td>
+                <td>
                   <div className="dropdown-container">
                     <select
                       className="dropdown-select"
@@ -66,7 +69,7 @@ function App() {
                     </select>
                   </div>
                 </td>
-                <td>Length x Width x Height</td> {/* Display the measurements */}
+                <td>Length x Width x Height</td>
                 <td></td>
                 <td>Cubic Yards</td>
                 <td>
@@ -77,6 +80,9 @@ function App() {
           </tbody>
         </table>
       </header>
+
+      {/* Popup for input fields */}
+      {popupOption && <CalculationPopup selectedOption={popupOption} onClose={() => setPopupOption(null)} />}
     </div>
   );
 }
