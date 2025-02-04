@@ -1,39 +1,39 @@
 import React, { useState } from "react";
-import "./CalculationPopup.css"; // Ensure you have styles for the popup
+import "./CalculationPopup.css";
 
-const CalculationPopup = ({ selectedOption, onClose }) => {
+const CalculationPopup = ({ selectedOption, onSave, onClose }) => {
   const [inputs, setInputs] = useState({});
 
-  const handleInputChange = (key, value, unit) => {
+  const handleInputChange = (key, value) => {
     setInputs((prev) => ({
       ...prev,
-      [key]: { value, unit },
+      [key]: { value },
     }));
   };
 
   const getInputFields = () => {
     switch (selectedOption) {
-      case "slabs":
+      case "slabs": // Slabs, Square Footings, Walls
         return [
           { label: "Length (L)", key: "length" },
           { label: "Width (W)", key: "width" },
           { label: "Thickness/Height (H)", key: "height" },
           { label: "Quantity", key: "quantity" },
         ];
-      case "holes":
+      case "holes": // Hole, Column, Round Footings
         return [
           { label: "Diameter (D)", key: "diameter" },
           { label: "Depth/Height (H)", key: "height" },
           { label: "Quantity", key: "quantity" },
         ];
-      case "circular":
+      case "circular": // Circular Slab, Tube
         return [
           { label: "Outer Diameter (D1)", key: "outerDiameter" },
           { label: "Inner Diameter (D2)", key: "innerDiameter" },
           { label: "Length/Height (H)", key: "height" },
           { label: "Quantity", key: "quantity" },
         ];
-      case "curb":
+      case "curb": // Curb, Gutter Barrier
         return [
           { label: "Curb Depth", key: "curbDepth" },
           { label: "Gutter Width", key: "gutterWidth" },
@@ -42,7 +42,7 @@ const CalculationPopup = ({ selectedOption, onClose }) => {
           { label: "Length", key: "length" },
           { label: "Quantity", key: "quantity" },
         ];
-      case "stairs":
+      case "stairs": // Stairs
         return [
           { label: "Run", key: "run" },
           { label: "Rise", key: "rise" },
@@ -54,8 +54,6 @@ const CalculationPopup = ({ selectedOption, onClose }) => {
         return [];
     }
   };
-
-  const unitOptions = ["meters", "feet", "inches", "yards", "centimeters"];
 
   return (
     <div className="popup-overlay">
@@ -69,28 +67,17 @@ const CalculationPopup = ({ selectedOption, onClose }) => {
               <input
                 type="number"
                 value={inputs[key]?.value || ""}
-                onChange={(e) =>
-                  handleInputChange(key, e.target.value, inputs[key]?.unit || "meters")
-                }
+                onChange={(e) => handleInputChange(key, e.target.value)}
                 placeholder={`Enter ${label.toLowerCase()}`}
               />
-              <select
-                value={inputs[key]?.unit || "meters"}
-                onChange={(e) =>
-                  handleInputChange(key, inputs[key]?.value || "", e.target.value)
-                }
-              >
-                {unitOptions.map((unit) => (
-                  <option key={unit} value={unit}>
-                    {unit}
-                  </option>
-                ))}
-              </select>
             </div>
           </div>
         ))}
 
-        <button onClick={onClose}>Close</button>
+        <div className="button-group">
+          <button onClick={() => onSave(inputs)}>Save</button>
+          <button onClick={onClose}>Close</button>
+        </div>
       </div>
     </div>
   );
