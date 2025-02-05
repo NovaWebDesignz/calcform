@@ -66,10 +66,12 @@
 }
 
 button {
-  margin-top: 15px;
-  padding: 10px 20px;
+  margin-top: 10px;
+  padding: 10px 15px;
+  margin-top: 10px;
+  margin-bottom: 11px;
   border: none;
-  background: #007bff;
+  background: #1d89fc;
   color: white;
   border-radius: 5px;
   cursor: pointer;
