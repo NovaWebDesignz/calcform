@@ -12,6 +12,11 @@ function App() {
   const [remarks, setRemarks] = useState([]);
   const [savedEntries, setSavedEntries] = useState([]); // Table for saved entries
 
+  // State for customer and site info
+  const [customerName, setCustomerName] = useState("");
+  const [customerContact, setCustomerContact] = useState("");
+  const [siteLocation, setSiteLocation] = useState("");
+
   const handleAddRow = () => {
     setVisibleRows((prev) => prev + 1);
     setSelectedOptions([...selectedOptions, ""]);
@@ -112,6 +117,16 @@ function App() {
     setSavedEntries(updatedEntries);
   };
 
+  const handleCustomerSave = () => {
+    // Save customer data (can be stored in local state or backend)
+    console.log("Customer Saved:", { name: customerName, contact: customerContact });
+  };
+
+  const handleSiteSave = () => {
+    // Save site location data (can be stored in local state or backend)
+    console.log("Site Saved:", siteLocation);
+  };
+
   return (
     <div className="App">
       <header className="App-header">
@@ -122,6 +137,66 @@ function App() {
           rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
         />
+
+        {/* Customer Table */}
+        <table className="customer-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Contact</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <input
+                  className="remarks-input customer-input"
+                  type="text"
+                  placeholder="Enter Name"
+                  value={customerName}
+                  onChange={(e) => setCustomerName(e.target.value)}
+                />
+              </td>
+              <td>
+                <input
+                  className="remarks-input customer-input"
+                  type="text"
+                  placeholder="Enter Contact"
+                  value={customerContact}
+                  onChange={(e) => setCustomerContact(e.target.value)}
+                />
+              </td>
+              <td>
+                <button onClick={handleCustomerSave}>Save</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        {/* Site Table */}
+        <table className="site-table">
+          <thead>
+            <tr>
+              <th>Site Location</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <input
+                  className="remarks-input site-input"
+                  type="text"
+                  placeholder="Enter Site Location"
+                  value={siteLocation}
+                  onChange={(e) => setSiteLocation(e.target.value)}
+                />
+              </td>
+              <td>
+                <button onClick={handleSiteSave}>Save</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
 
         {/* NEW TABLE FOR SAVED ENTRIES */}
         <table className="saved-entries-table">

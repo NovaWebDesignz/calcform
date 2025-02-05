@@ -53,6 +53,7 @@ h1 {
 .saved-entries-table {
   width: 100%;
   border-collapse: collapse;
+  margin-top: 50px;
   margin-bottom: 180px;
 }
 
@@ -205,6 +206,7 @@ currect changes */
   vertical-align: middle; /* Center vertically */
   padding: 0; /* Remove padding */
   padding-bottom: 10px; /* Add some padding to create space below */
+  padding-top: 10px;
 }
 
 /* Remove Button */
@@ -237,3 +239,36 @@ currect changes */
   font-size: 20px; /* Set icon size */
   color: darkgrey; /* Icon color */
 }
+
+
+
+.customer-table-container, .site-table-container {
+  border: 1px solid #ccc;  /* Thin border around the table containers */
+  margin-bottom: 30px;
+  padding: 25px;
+  width: 50%;  /* Set the width of these containers */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.customer-table, .site-table {
+  width: 50%;
+  border-collapse: collapse;
+}
+
+.customer-table th, .site-table th, .customer-table td, .site-table td {
+  border: 1px solid #ddd; /* Thin border for table rows and columns */
+  padding: 8px;
+  text-align: left;
+}
+
+.customer-table th, .site-table th {
+  background-color: #f4f4f4;
+}
+
+.customer-input, .site-input {
+  border: 1px solid #ddd; /* Thin border for input fields */
+  padding: 6px;
+  width: 100%;
+}
+
