@@ -47,4 +47,124 @@ h1 {
 .calculator-table tr:hover td {
   background-color: #f1f1f1;
 }
+
+/* General Button Styling - Silver Polished Look */
+.action-btn {
+  background: linear-gradient(145deg, #d9d9d9, #f2f2f2); /* Soft silver gradient */
+  border: 2px solid #b0b0b0; /* Subtle silver border */
+  color: #555; /* Dark grey text for contrast */
+  font-size: 28px; /* Bigger text for better visibility */
+  font-weight: 300; /* Thin font weight */
+  padding: 2px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 45px;
+  height: 45px;
+  font-family: Arial, sans-serif; /* Clean, modern font */
+}
+
+/* Hover Effect */
+.action-btn:hover {
+  background: linear-gradient(145deg, #f2f2f2, #ffffff);
+  border-color: #999;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Remove Button - Slight Red Tint */
+.remove-btn {
+  border-color: #b22222;
+  color: #b22222;
+}
+
+.remove-btn:hover {
+  background: linear-gradient(145deg, #f2d9d9, #ffffff);
+  border-color: #a00000;
+  color: #a00000;
+}
+
+/* Center the buttons inside the table */
+th:first-child, td:first-child {
+  text-align: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .action-btn {
+    font-size: 24px; /* Adjust font size for smaller screens */
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .action-btn {
+    font-size: 20px;
+    width: 35px;
+    height: 35px;
+  }
+}
+
+
+
  
+/* Style for Remarks input field */
+.remarks-input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.3s ease-in-out;
+  box-sizing: border-box; /* Ensures padding does not cause overflow */
+}
+
+/* Add hover and focus effect */
+.remarks-input:hover,
+.remarks-input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Center align the remarks column */
+th:nth-child(7), td:nth-child(7) {
+  text-align: center;
+}
+
+/* Adjust table column width for better visibility */
+th, td {
+  padding: 12px;
+}
+
+th:nth-child(7) {
+  width: 200px; /* Adjust width for remarks column */
+  max-width: 100%; /* Ensure the column doesn't overflow */
+}
+
+/* Make remarks input responsive on smaller screens */
+@media (max-width: 768px) {
+  th:nth-child(7), td:nth-child(7) {
+    width: 150px; /* Smaller width on smaller screens */
+  }
+
+  .remarks-input {
+    font-size: 12px; /* Reduce font size on smaller screens */
+  }
+}
+
+/* Further adjustments for very small screens */
+@media (max-width: 480px) {
+  th:nth-child(7), td:nth-child(7) {
+    width: auto; /* Make it auto on very small screens */
+    max-width: 100%;
+  }
+
+  .remarks-input {
+    font-size: 12px; /* Smaller font for better fit */
+  }
+}

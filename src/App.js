@@ -9,12 +9,14 @@ function App() {
   const [popupIndex, setPopupIndex] = useState(null);
   const [measurements, setMeasurements] = useState([]);
   const [results, setResults] = useState([]);
+  const [remarks, setRemarks] = useState([]); // New state for remarks
 
   const handleAddRow = () => {
     setVisibleRows((prev) => prev + 1);
     setSelectedOptions([...selectedOptions, ""]);
     setMeasurements([...measurements, ""]);
     setResults([...results, ""]);
+    setRemarks([...remarks, ""]); // Initialize empty remark
   };
 
   const handleRemoveRow = (index) => {
@@ -22,6 +24,7 @@ function App() {
     setSelectedOptions(selectedOptions.filter((_, i) => i !== index));
     setMeasurements(measurements.filter((_, i) => i !== index));
     setResults(results.filter((_, i) => i !== index));
+    setRemarks(remarks.filter((_, i) => i !== index)); // Remove remark
   };
 
   const handleOptionChange = (index, value) => {
@@ -39,19 +42,19 @@ function App() {
 
   const calculateResult = (option, inputs) => {
     switch (option) {
-      case "slabs": // Area = 2 × (L × W × H)
+      case "slabs":
         return inputs.length?.value && inputs.width?.value && inputs.height?.value
           ? (2 * (inputs.length.value * inputs.width.value * inputs.height.value)).toFixed(2)
           : "";
-      case "holes": // Area = 3.14 × (D / 2) × H
+      case "holes":
         return inputs.diameter?.value && inputs.height?.value
           ? (3.14 * (inputs.diameter.value / 2) * inputs.height.value).toFixed(2)
           : "";
-      case "circular": // Volume = 3.14 × R × R × H
+      case "circular":
         return inputs.outerDiameter?.value && inputs.height?.value
           ? (3.14 * Math.pow(inputs.outerDiameter.value / 2, 2) * inputs.height.value).toFixed(2)
           : "";
-      case "curb": // Custom Formula: Volume = (Curb Depth × Gutter Width) + (Curb Height × Flag Thickness) × Length
+      case "curb":
         return inputs.curbDepth?.value &&
           inputs.gutterWidth?.value &&
           inputs.curbHeight?.value &&
@@ -62,7 +65,7 @@ function App() {
               (inputs.curbHeight.value * inputs.flagThickness.value) * inputs.length.value
             ).toFixed(2)
           : "";
-      case "stairs": // Custom Formula: Volume = Run × Rise × Width × Steps
+      case "stairs":
         return inputs.run?.value &&
           inputs.rise?.value &&
           inputs.width?.value &&
@@ -79,6 +82,7 @@ function App() {
       .map((item) => item.value)
       .filter(Boolean)
       .join(" x ");
+
     const newMeasurements = [...measurements];
     newMeasurements[index] = formattedMeasurement;
     setMeasurements(newMeasurements);
@@ -95,11 +99,12 @@ function App() {
     <div className="App">
       <header className="App-header">
         <h1>Concrete Calculator Form</h1>
+
         <table className="calculator-table">
           <thead>
             <tr>
               <th>
-                <button onClick={handleAddRow}>+</button>
+                <button className="action-btn" onClick={handleAddRow}>+</button>
               </th>
               <th>S.no</th>
               <th>Type of Calculations</th>
@@ -113,7 +118,7 @@ function App() {
             {[...Array(visibleRows)].map((_, index) => (
               <tr key={index}>
                 <td>
-                  <button onClick={() => handleRemoveRow(index)}>-</button>
+                  <button className="action-btn remove-btn" onClick={() => handleRemoveRow(index)}>-</button>
                 </td>
                 <td>{index + 1}</td>
                 <td>
@@ -134,7 +139,17 @@ function App() {
                 <td>{results[index] || "N/A"}</td>
                 <td>Cubic Yards</td>
                 <td>
-                  <input type="text" placeholder="Enter remarks" className="remarks-input" />
+                  <input
+                    type="text"
+                    placeholder="Enter remarks"
+                    className="remarks-input"
+                    value={remarks[index] || ""}
+                    onChange={(e) => {
+                      const newRemarks = [...remarks];
+                      newRemarks[index] = e.target.value;
+                      setRemarks(newRemarks);
+                    }}
+                  />
                 </td>
               </tr>
             ))}
