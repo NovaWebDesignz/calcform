@@ -9,14 +9,15 @@ function App() {
   const [popupIndex, setPopupIndex] = useState(null);
   const [measurements, setMeasurements] = useState([]);
   const [results, setResults] = useState([]);
-  const [remarks, setRemarks] = useState([]); // New state for remarks
+  const [remarks, setRemarks] = useState([]);
+  const [savedEntries, setSavedEntries] = useState([]); // Table for saved entries
 
   const handleAddRow = () => {
     setVisibleRows((prev) => prev + 1);
     setSelectedOptions([...selectedOptions, ""]);
     setMeasurements([...measurements, ""]);
     setResults([...results, ""]);
-    setRemarks([...remarks, ""]); // Initialize empty remark
+    setRemarks([...remarks, ""]);
   };
 
   const handleRemoveRow = (index) => {
@@ -24,7 +25,7 @@ function App() {
     setSelectedOptions(selectedOptions.filter((_, i) => i !== index));
     setMeasurements(measurements.filter((_, i) => i !== index));
     setResults(results.filter((_, i) => i !== index));
-    setRemarks(remarks.filter((_, i) => i !== index)); // Remove remark
+    setRemarks(remarks.filter((_, i) => i !== index));
   };
 
   const handleOptionChange = (index, value) => {
@@ -82,7 +83,6 @@ function App() {
       .map((item) => item.value)
       .filter(Boolean)
       .join(" x ");
-
     const newMeasurements = [...measurements];
     newMeasurements[index] = formattedMeasurement;
     setMeasurements(newMeasurements);
@@ -95,16 +95,80 @@ function App() {
     setPopupIndex(null);
   };
 
+  const handleSaveEntry = (index) => {
+    const newEntry = {
+      structure: selectedOptions[index] || "N/A",
+      measurement: measurements[index] || "N/A",
+      requiredQty: results[index] || "N/A",
+      unit: "CBM",
+      remarks: remarks[index] || "",
+    };
+
+    setSavedEntries([newEntry, ...savedEntries]); // Add new entry at the top
+  };
+
+  const handleRemoveSavedEntry = (index) => {
+    const updatedEntries = savedEntries.filter((_, i) => i !== index);
+    setSavedEntries(updatedEntries);
+  };
+
   return (
     <div className="App">
       <header className="App-header">
         <h1>Concrete Calculator Form</h1>
 
+        {/* Add Font Awesome CDN for icons */}
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+        />
+
+        {/* NEW TABLE FOR SAVED ENTRIES */}
+        <table className="saved-entries-table">
+          <thead>
+            <tr>
+              <th>Sl. No.</th>
+              <th>Structure</th>
+              <th>Measurement</th>
+              <th>Required Qty.</th>
+              <th>Unit</th>
+              <th>Remarks</th>
+              <th>Remove</th>
+            </tr>
+          </thead>
+          <tbody>
+            {savedEntries.length > 0 ? (
+              savedEntries.map((entry, index) => (
+                <tr key={index}>
+                  <td>{index + 1}</td>
+                  <td>{entry.structure}</td>
+                  <td>{entry.measurement}</td>
+                  <td>{entry.requiredQty}</td>
+                  <td>{entry.unit}</td>
+                  <td>{entry.remarks}</td>
+                  <td>
+                    <button className="remove-entry-btn" onClick={() => handleRemoveSavedEntry(index)}>
+                      <i className="fa fa-trash"></i> {/* Trash bin icon */}
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="7" style={{ textAlign: "center", fontStyle: "italic" }}>
+                  No entries yet
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+
+        {/* MAIN FORM TABLE */}
         <table className="calculator-table">
           <thead>
             <tr>
               <th>
-                <button className="action-btn" onClick={handleAddRow}>+</button>
+                <button className="action-btn" onClick={handleAddRow}>＋</button>
               </th>
               <th>S.no</th>
               <th>Type of Calculations</th>
@@ -112,13 +176,14 @@ function App() {
               <th>Results</th>
               <th>Units</th>
               <th>Remarks</th>
+              <th>Save</th>
             </tr>
           </thead>
           <tbody>
             {[...Array(visibleRows)].map((_, index) => (
               <tr key={index}>
                 <td>
-                  <button className="action-btn remove-btn" onClick={() => handleRemoveRow(index)}>-</button>
+                  <button className="action-btn remove-btn" onClick={() => handleRemoveRow(index)}>−</button>
                 </td>
                 <td>{index + 1}</td>
                 <td>
@@ -137,7 +202,7 @@ function App() {
                 </td>
                 <td>{measurements[index] || "Enter measurements"}</td>
                 <td>{results[index] || "N/A"}</td>
-                <td>Cubic Yards</td>
+                <td>CBM</td>
                 <td>
                   <input
                     type="text"
@@ -150,6 +215,9 @@ function App() {
                       setRemarks(newRemarks);
                     }}
                   />
+                </td>
+                <td>
+                  <button className="save-btn" onClick={() => handleSaveEntry(index)}>Save</button>
                 </td>
               </tr>
             ))}
