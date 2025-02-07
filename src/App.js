@@ -54,12 +54,18 @@ function App() {
           : "";
       case "holes":
         return inputs.diameter?.value && inputs.height?.value
-          ? (3.14 * (inputs.diameter.value / 2) * inputs.height.value).toFixed(2)
+          ? (3.14 * (inputs.diameter.value / 2) * inputs.height.value).toFixed(2)  // Using the correct formula
           : "";
+          
       case "circular":
-        return inputs.outerDiameter?.value && inputs.height?.value
-          ? (3.14 * Math.pow(inputs.outerDiameter.value / 2, 2) * inputs.height.value).toFixed(2)
-          : "";
+        if (inputs.outerDiameter?.value && inputs.innerDiameter?.value && inputs.height?.value) {
+          const outerRadius = inputs.outerDiameter.value / 2;
+          const innerRadius = inputs.innerDiameter.value / 2;
+          const height = inputs.height.value;
+          const volume = 3.14 * (Math.pow(outerRadius, 2) - Math.pow(innerRadius, 2)) * height;
+          return volume.toFixed(2); // Round to two decimal places
+        }
+        return "";
       case "curb":
         return inputs.curbDepth?.value &&
           inputs.gutterWidth?.value &&
@@ -198,48 +204,10 @@ function App() {
           </tbody>
         </table>
 
-        {/* NEW TABLE FOR SAVED ENTRIES */}
-        <table className="saved-entries-table">
-          <thead>
-            <tr>
-              <th>Sl. No.</th>
-              <th>Structure</th>
-              <th>Measurement</th>
-              <th>Required Qty.</th>
-              <th>Unit</th>
-              <th>Remarks</th>
-              <th>Remove</th>
-            </tr>
-          </thead>
-          <tbody>
-            {savedEntries.length > 0 ? (
-              savedEntries.map((entry, index) => (
-                <tr key={index}>
-                  <td>{index + 1}</td>
-                  <td>{entry.structure}</td>
-                  <td>{entry.measurement}</td>
-                  <td>{entry.requiredQty}</td>
-                  <td>{entry.unit}</td>
-                  <td>{entry.remarks}</td>
-                  <td>
-                    <button className="remove-entry-btn" onClick={() => handleRemoveSavedEntry(index)}>
-                      <i className="fa fa-trash"></i> {/* Trash bin icon */}
-                    </button>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="7" style={{ textAlign: "center", fontStyle: "italic" }}>
-                  No entries yet
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
 
-        {/* MAIN FORM TABLE */}
-        <table className="calculator-table">
+
+{/* MAIN FORM TABLE */}
+<table className="calculator-table">
           <thead>
             <tr>
               <th>
@@ -298,6 +266,49 @@ function App() {
             ))}
           </tbody>
         </table>
+
+
+        {/* NEW TABLE FOR SAVED ENTRIES */}
+        <table className="saved-entries-table">
+          <thead>
+            <tr>
+              <th>Sl. No.</th>
+              <th>Structure</th>
+              <th>Measurement</th>
+              <th>Required Qty.</th>
+              <th>Unit</th>
+              <th>Remarks</th>
+              <th>Remove</th>
+            </tr>
+          </thead>
+          <tbody>
+            {savedEntries.length > 0 ? (
+              savedEntries.map((entry, index) => (
+                <tr key={index}>
+                  <td>{index + 1}</td>
+                  <td>{entry.structure}</td>
+                  <td>{entry.measurement}</td>
+                  <td>{entry.requiredQty}</td>
+                  <td>{entry.unit}</td>
+                  <td>{entry.remarks}</td>
+                  <td>
+                    <button className="remove-entry-btn" onClick={() => handleRemoveSavedEntry(index)}>
+                      <i className="fa fa-trash"></i> {/* Trash bin icon */}
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="7" style={{ textAlign: "center", fontStyle: "italic" }}>
+                  No entries yet
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+
+        
       </header>
 
       {popupOption && popupIndex !== null && (

@@ -1,14 +1,34 @@
 import React, { useState } from "react";
 import "./CalculationPopup.css";
 
+const unitConversion = {
+  meters: 1,
+  feet: 3.28084,
+  inches: 39.3701,
+  yards: 1.09361,
+  centimeters: 100,
+};
+
 const CalculationPopup = ({ selectedOption, onSave, onClose }) => {
   const [inputs, setInputs] = useState({});
+  const [units, setUnits] = useState({});
 
-  const handleInputChange = (key, value) => {
+  const handleInputChange = (key, value, unit) => {
     setInputs((prev) => ({
       ...prev,
-      [key]: { value },
+      [key]: { value: parseFloat(value) || 0, unit: unit || "meters" },
     }));
+  };
+
+  const handleUnitChange = (key, unit) => {
+    setUnits((prev) => ({
+      ...prev,
+      [key]: unit,
+    }));
+  };
+
+  const convertValueToMeters = (value, unit) => {
+    return value / unitConversion[unit];
   };
 
   const getInputFields = () => {
@@ -55,6 +75,18 @@ const CalculationPopup = ({ selectedOption, onSave, onClose }) => {
     }
   };
 
+  const handleSave = () => {
+    const convertedInputs = {};
+    for (const [key, input] of Object.entries(inputs)) {
+      const { value, unit } = input;
+      convertedInputs[key] = {
+        value: convertValueToMeters(value, unit), // Convert to meters
+        unit: "meters", // Saving in meters
+      };
+    }
+    onSave(convertedInputs);
+  };
+
   return (
     <div className="popup-overlay">
       <div className="popup">
@@ -67,15 +99,25 @@ const CalculationPopup = ({ selectedOption, onSave, onClose }) => {
               <input
                 type="number"
                 value={inputs[key]?.value || ""}
-                onChange={(e) => handleInputChange(key, e.target.value)}
+                onChange={(e) => handleInputChange(key, e.target.value, units[key])}
                 placeholder={`Enter ${label.toLowerCase()}`}
               />
+              <select
+                value={units[key] || "meters"}
+                onChange={(e) => handleUnitChange(key, e.target.value)}
+              >
+                <option value="meters">Meters</option>
+                <option value="feet">Feet</option>
+                <option value="inches">Inches</option>
+                <option value="yards">Yards</option>
+                <option value="centimeters">Centimeters</option>
+              </select>
             </div>
           </div>
         ))}
 
         <div className="button-group">
-          <button onClick={() => onSave(inputs)}>Save</button>
+          <button onClick={handleSave}>Save</button>
           <button onClick={onClose}>Close</button>
         </div>
       </div>
