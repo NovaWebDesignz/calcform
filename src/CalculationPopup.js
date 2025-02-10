@@ -15,7 +15,6 @@ const CalculationPopup = ({ selectedOption, onSave, onClose, calculateFor, onCal
   const [calculateForOption, setCalculateForOption] = useState(calculateFor || "");
 
   useEffect(() => {
-    // Set initial value for Calculate For when calculateFor prop changes
     setCalculateForOption(calculateFor);
   }, [calculateFor]);
 
@@ -37,7 +36,7 @@ const CalculationPopup = ({ selectedOption, onSave, onClose, calculateFor, onCal
     const value = e.target.value;
     setCalculateForOption(value);
     if (onCalculateForChange) {
-      onCalculateForChange(value); // Ensure the function is passed down properly
+      onCalculateForChange(value);
     }
   };
 
@@ -52,20 +51,17 @@ const CalculationPopup = ({ selectedOption, onSave, onClose, calculateFor, onCal
           { label: "Length (L)", key: "length" },
           { label: "Width (W)", key: "width" },
           { label: "Thickness/Height (H)", key: "height" },
-          { label: "Quantity", key: "quantity" },
         ];
       case "holes":
         return [
           { label: "Diameter (D)", key: "diameter" },
           { label: "Depth/Height (H)", key: "height" },
-          { label: "Quantity", key: "quantity" },
         ];
       case "circular":
         return [
           { label: "Outer Diameter (D1)", key: "outerDiameter" },
           { label: "Inner Diameter (D2)", key: "innerDiameter" },
           { label: "Length/Height (H)", key: "height" },
-          { label: "Quantity", key: "quantity" },
         ];
       case "curb":
         return [
@@ -74,7 +70,6 @@ const CalculationPopup = ({ selectedOption, onSave, onClose, calculateFor, onCal
           { label: "Curb Height", key: "curbHeight" },
           { label: "Flag Thickness", key: "flagThickness" },
           { label: "Length", key: "length" },
-          { label: "Quantity", key: "quantity" },
         ];
       case "stairs":
         return [
@@ -98,6 +93,7 @@ const CalculationPopup = ({ selectedOption, onSave, onClose, calculateFor, onCal
         unit: "meters",
       };
     }
+    convertedInputs["quantity"] = { value: 1, unit: "count" }; // Default quantity
     onSave(convertedInputs);
   };
 
@@ -168,6 +164,11 @@ const CalculationPopup = ({ selectedOption, onSave, onClose, calculateFor, onCal
             </div>
           </div>
         ))}
+
+        <div className="input-group">
+          <label>Quantity</label>
+          <span>1</span>
+        </div>
 
         <div className="button-group">
           <button onClick={handleSave}>Save</button>
