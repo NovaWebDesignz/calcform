@@ -50,7 +50,7 @@ function App() {
     switch (option) {
       case "slabs":
         return inputs.length?.value && inputs.width?.value && inputs.height?.value
-          ? (2 * (inputs.length.value * inputs.width.value * inputs.height.value)).toFixed(2)
+          ? (inputs.length.value * inputs.width.value * inputs.height.value).toFixed(2)
           : "";
       case "holes":
         return inputs.diameter?.value && inputs.height?.value
@@ -136,7 +136,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Concrete Calculator Form</h1>
+        <h1>Concrete Calculator</h1>
 
         {/* Add Font Awesome CDN for icons */}
         <link
