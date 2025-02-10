@@ -56,7 +56,6 @@ function App() {
         return inputs.diameter?.value && inputs.height?.value
           ? (3.14 * (inputs.diameter.value / 2) * inputs.height.value).toFixed(2)  // Using the correct formula
           : "";
-          
       case "circular":
         if (inputs.outerDiameter?.value && inputs.innerDiameter?.value && inputs.height?.value) {
           const outerRadius = inputs.outerDiameter.value / 2;
@@ -67,23 +66,31 @@ function App() {
         }
         return "";
       case "curb":
-        return inputs.curbDepth?.value &&
-          inputs.gutterWidth?.value &&
+        if (
+          inputs.curbDepth?.value &&
           inputs.curbHeight?.value &&
           inputs.flagThickness?.value &&
-          inputs.length?.value
-          ? (
-              (inputs.curbDepth.value * inputs.gutterWidth.value) +
-              (inputs.curbHeight.value * inputs.flagThickness.value) * inputs.length.value
-            ).toFixed(2)
-          : "";
+          inputs.length?.value &&
+          inputs.gutterWidth?.value
+        ) {
+          const volumeUnderCurb = inputs.curbDepth.value * (inputs.curbHeight.value + inputs.flagThickness.value) * inputs.length.value;
+          const volumeUnderGutter = inputs.gutterWidth.value * inputs.flagThickness.value * inputs.length.value;
+          return (volumeUnderCurb + volumeUnderGutter).toFixed(2);
+        }
+        return "";
       case "stairs":
-        return inputs.run?.value &&
+        if (
+          inputs.platformDepth?.value &&
           inputs.rise?.value &&
+          inputs.steps?.value &&
           inputs.width?.value &&
-          inputs.steps?.value
-          ? (inputs.run.value * inputs.rise.value * inputs.width.value * inputs.steps.value).toFixed(2)
-          : "";
+          inputs.run?.value
+        ) {
+          const volumeUnderPlatform = inputs.platformDepth.value * (inputs.rise.value * inputs.steps.value) * inputs.width.value;
+          const volumeUnderSteps = inputs.run.value * (inputs.rise.value * inputs.steps.value) * inputs.width.value;
+          return (volumeUnderPlatform + volumeUnderSteps).toFixed(2);
+        }
+        return "";
       default:
         return "";
     }
@@ -204,10 +211,8 @@ function App() {
           </tbody>
         </table>
 
-
-
-{/* MAIN FORM TABLE */}
-<table className="calculator-table">
+        {/* MAIN FORM TABLE */}
+        <table className="calculator-table">
           <thead>
             <tr>
               <th>
@@ -267,7 +272,6 @@ function App() {
           </tbody>
         </table>
 
-
         {/* NEW TABLE FOR SAVED ENTRIES */}
         <table className="saved-entries-table">
           <thead>
@@ -307,18 +311,13 @@ function App() {
             )}
           </tbody>
         </table>
-
-        
       </header>
 
       {popupOption && popupIndex !== null && (
         <CalculationPopup
           selectedOption={popupOption}
           onSave={(data) => handleSaveMeasurements(popupIndex, data)}
-          onClose={() => {
-            setPopupOption(null);
-            setPopupIndex(null);
-          }}
+          onClose={() => setPopupOption(null)}
         />
       )}
     </div>

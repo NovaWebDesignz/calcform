@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./CalculationPopup.css";
 
 const unitConversion = {
@@ -9,9 +9,15 @@ const unitConversion = {
   centimeters: 100,
 };
 
-const CalculationPopup = ({ selectedOption, onSave, onClose }) => {
+const CalculationPopup = ({ selectedOption, onSave, onClose, calculateFor, onCalculateForChange }) => {
   const [inputs, setInputs] = useState({});
   const [units, setUnits] = useState({});
+  const [calculateForOption, setCalculateForOption] = useState(calculateFor || "");
+
+  useEffect(() => {
+    // Set initial value for Calculate For when calculateFor prop changes
+    setCalculateForOption(calculateFor);
+  }, [calculateFor]);
 
   const handleInputChange = (key, value, unit) => {
     setInputs((prev) => ({
@@ -27,33 +33,41 @@ const CalculationPopup = ({ selectedOption, onSave, onClose }) => {
     }));
   };
 
+  const handleCalculateForChange = (e) => {
+    const value = e.target.value;
+    setCalculateForOption(value);
+    if (onCalculateForChange) {
+      onCalculateForChange(value); // Ensure the function is passed down properly
+    }
+  };
+
   const convertValueToMeters = (value, unit) => {
     return value / unitConversion[unit];
   };
 
   const getInputFields = () => {
     switch (selectedOption) {
-      case "slabs": // Slabs, Square Footings, Walls
+      case "slabs":
         return [
           { label: "Length (L)", key: "length" },
           { label: "Width (W)", key: "width" },
           { label: "Thickness/Height (H)", key: "height" },
           { label: "Quantity", key: "quantity" },
         ];
-      case "holes": // Hole, Column, Round Footings
+      case "holes":
         return [
           { label: "Diameter (D)", key: "diameter" },
           { label: "Depth/Height (H)", key: "height" },
           { label: "Quantity", key: "quantity" },
         ];
-      case "circular": // Circular Slab, Tube
+      case "circular":
         return [
           { label: "Outer Diameter (D1)", key: "outerDiameter" },
           { label: "Inner Diameter (D2)", key: "innerDiameter" },
           { label: "Length/Height (H)", key: "height" },
           { label: "Quantity", key: "quantity" },
         ];
-      case "curb": // Curb, Gutter Barrier
+      case "curb":
         return [
           { label: "Curb Depth", key: "curbDepth" },
           { label: "Gutter Width", key: "gutterWidth" },
@@ -62,7 +76,7 @@ const CalculationPopup = ({ selectedOption, onSave, onClose }) => {
           { label: "Length", key: "length" },
           { label: "Quantity", key: "quantity" },
         ];
-      case "stairs": // Stairs
+      case "stairs":
         return [
           { label: "Run", key: "run" },
           { label: "Rise", key: "rise" },
@@ -80,8 +94,8 @@ const CalculationPopup = ({ selectedOption, onSave, onClose }) => {
     for (const [key, input] of Object.entries(inputs)) {
       const { value, unit } = input;
       convertedInputs[key] = {
-        value: convertValueToMeters(value, unit), // Convert to meters
-        unit: "meters", // Saving in meters
+        value: convertValueToMeters(value, unit),
+        unit: "meters",
       };
     }
     onSave(convertedInputs);
@@ -91,6 +105,45 @@ const CalculationPopup = ({ selectedOption, onSave, onClose }) => {
     <div className="popup-overlay">
       <div className="popup">
         <h2>{selectedOption} Measurements</h2>
+
+        <div className="input-group">
+          <label>Calculate For</label>
+          <select value={calculateForOption} onChange={handleCalculateForChange}>
+            {selectedOption === "slabs" && (
+              <>
+                <option value="slab">Slab</option>
+                <option value="wall">Wall</option>
+                <option value="squareFooting">Square Footing</option>
+                <option value="squareColumn">Square Column</option>
+              </>
+            )}
+            {selectedOption === "holes" && (
+              <>
+                <option value="hole">Hole</option>
+                <option value="column">Column</option>
+                <option value="roundFooting">Round Footing</option>
+              </>
+            )}
+            {selectedOption === "circular" && (
+              <>
+                <option value="circularSlab">Circular Slab</option>
+                <option value="tube">Tube</option>
+              </>
+            )}
+            {selectedOption === "curb" && (
+              <>
+                <option value="curb">Curb</option>
+                <option value="gutterBarrier">Gutter Barrier</option>
+              </>
+            )}
+            {selectedOption === "stairs" && (
+              <>
+                <option value="staircase">Staircase</option>
+                <option value="steps">Steps</option>
+              </>
+            )}
+          </select>
+        </div>
 
         {getInputFields().map(({ label, key }) => (
           <div key={key} className="input-group">
