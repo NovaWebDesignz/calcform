@@ -3,10 +3,10 @@ import "./CalculationPopup.css";
 
 const unitConversion = {
   meters: 1,
-  feet: 3.28084,
-  inches: 39.3701,
-  yards: 1.09361,
-  centimeters: 100,
+  feet: 0.3048,
+  inches: 0.0254,
+  yards: 0.9144,
+  centimeters: 0.01,
 };
 
 const CalculationPopup = ({ selectedOption, onSave, onClose, calculateFor, onCalculateForChange }) => {
@@ -41,7 +41,7 @@ const CalculationPopup = ({ selectedOption, onSave, onClose, calculateFor, onCal
   };
 
   const convertValueToMeters = (value, unit) => {
-    return value / unitConversion[unit];
+    return value * unitConversion[unit];
   };
 
   const getInputFields = () => {
