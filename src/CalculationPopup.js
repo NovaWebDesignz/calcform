@@ -96,7 +96,7 @@ const CalculationPopup = ({ selectedOption, onSave, onClose, calculateFor, onCal
     convertedInputs["quantity"] = { value: 1, unit: "count" }; // Default quantity
     onSave(convertedInputs);
   };
-
+ 
   return (
     <div className="popup-overlay">
       <div className="popup">
