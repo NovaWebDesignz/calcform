@@ -11,25 +11,45 @@ const unitConversion = {
 
 const CalculationPopup = ({ selectedOption, onSave, onClose, calculateFor, onCalculateForChange }) => {
   const [inputs, setInputs] = useState({});
-  const [units, setUnits] = useState({});
   const [calculateForOption, setCalculateForOption] = useState(calculateFor || "");
 
   useEffect(() => {
     setCalculateForOption(calculateFor);
   }, [calculateFor]);
 
-  const handleInputChange = (key, value, unit) => {
-    setInputs((prev) => ({
-      ...prev,
-      [key]: { value: parseFloat(value) || 0, unit: unit || "meters" },
-    }));
+  const convertToMeters = (value, unit) => value * unitConversion[unit];
+  const convertFromMeters = (value, unit) => value / unitConversion[unit];
+
+  const handleInputChange = (key, value) => {
+    setInputs((prev) => {
+      const currentUnit = prev[key]?.unit || "meters";
+      return {
+        ...prev,
+        [key]: { value: parseFloat(value) || 0, unit: currentUnit },
+      };
+    });
   };
 
-  const handleUnitChange = (key, unit) => {
-    setUnits((prev) => ({
-      ...prev,
-      [key]: unit,
-    }));
+  const handleUnitChange = (key, newUnit) => {
+    setInputs((prevInputs) => {
+      const prevValue = prevInputs[key]?.value || 0;
+      const prevUnit = prevInputs[key]?.unit || "meters";
+
+      if (prevValue !== 0) {
+        const valueInMeters = convertToMeters(prevValue, prevUnit);
+        const convertedValue = convertFromMeters(valueInMeters, newUnit);
+
+        return {
+          ...prevInputs,
+          [key]: { value: convertedValue, unit: newUnit },
+        };
+      } else {
+        return {
+          ...prevInputs,
+          [key]: { value: 0, unit: newUnit },
+        };
+      }
+    });
   };
 
   const handleCalculateForChange = (e) => {
@@ -38,10 +58,6 @@ const CalculationPopup = ({ selectedOption, onSave, onClose, calculateFor, onCal
     if (onCalculateForChange) {
       onCalculateForChange(value);
     }
-  };
-
-  const convertValueToMeters = (value, unit) => {
-    return value * unitConversion[unit];
   };
 
   const getInputFields = () => {
@@ -87,16 +103,15 @@ const CalculationPopup = ({ selectedOption, onSave, onClose, calculateFor, onCal
   const handleSave = () => {
     const convertedInputs = {};
     for (const [key, input] of Object.entries(inputs)) {
-      const { value, unit } = input;
       convertedInputs[key] = {
-        value: convertValueToMeters(value, unit),
+        value: convertToMeters(input.value, input.unit),
         unit: "meters",
       };
     }
-    convertedInputs["quantity"] = { value: 1, unit: "count" }; // Default quantity
+    convertedInputs["quantity"] = { value: 1, unit: "count" };
     onSave(convertedInputs);
   };
- 
+
   return (
     <div className="popup-overlay">
       <div className="popup">
@@ -148,11 +163,11 @@ const CalculationPopup = ({ selectedOption, onSave, onClose, calculateFor, onCal
               <input
                 type="number"
                 value={inputs[key]?.value || ""}
-                onChange={(e) => handleInputChange(key, e.target.value, units[key])}
+                onChange={(e) => handleInputChange(key, e.target.value)}
                 placeholder={`Enter ${label.toLowerCase()}`}
               />
               <select
-                value={units[key] || "meters"}
+                value={inputs[key]?.unit || "meters"}
                 onChange={(e) => handleUnitChange(key, e.target.value)}
               >
                 <option value="meters">Meters</option>
