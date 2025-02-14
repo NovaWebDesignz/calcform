@@ -101,15 +101,18 @@ const CalculationPopup = ({ selectedOption, onSave, onClose, calculateFor, onCal
   };
 
   const handleSave = () => {
-    const convertedInputs = {};
+    // Create the measurements data from user input
+    const convertedInputs = [];
     for (const [key, input] of Object.entries(inputs)) {
-      convertedInputs[key] = {
-        value: convertToMeters(input.value, input.unit),
-        unit: "meters",
-      };
+      convertedInputs.push({
+        label: key,  // The input label, e.g., 'Length', 'Width', etc.
+        value: input.value,  // The value entered by the user
+      });
     }
-    convertedInputs["quantity"] = { value: 1, unit: "count" };
-    onSave(convertedInputs);
+  
+    // Pass the data back to the parent component
+    onSave(convertedInputs);  // This passes the formatted measurements back to App.js
+    onClose();  // Optionally close the popup
   };
 
   return (

@@ -96,22 +96,26 @@ function App() {
     }
   };
 
-  const handleSaveMeasurements = (index, data) => {
-    const formattedMeasurement = Object.values(data)
-      .map((item) => item.value)
-      .filter(Boolean)
-      .join(" x ");
-    const newMeasurements = [...measurements];
-    newMeasurements[index] = formattedMeasurement;
-    setMeasurements(newMeasurements);
-
-    const newResults = [...results];
-    newResults[index] = calculateResult(selectedOptions[index], data);
-    setResults(newResults);
-
-    setPopupOption(null);
-    setPopupIndex(null);
+  const handleSaveMeasurements = (rowIndex, newMeasurements) => {
+    // Ensure newMeasurements is an array
+    if (!Array.isArray(newMeasurements)) {
+      console.error('Expected newMeasurements to be an array:', newMeasurements);
+      return;
+    }
+  
+    // Format measurements data into a string representation
+    const formattedMeasurements = newMeasurements
+      .filter((item) => item.value !== "")  // Remove empty values
+      .map((item) => `${item.label} = ${item.value}`)  // Format as "Label = Value"
+      .join("\n");  // Join with new lines for better readability
+  
+    // Update the measurements state for the specific rowIndex
+    const updatedMeasurements = [...measurements];
+    updatedMeasurements[rowIndex] = formattedMeasurements;  // Store the formatted string in the right index
+  
+    setMeasurements(updatedMeasurements);  // Update the state
   };
+  
 
   const handleSaveEntry = (index) => {
     const newEntry = {
@@ -138,6 +142,15 @@ function App() {
   const handleSiteSave = () => {
     // Save site location data (can be stored in local state or backend)
     console.log("Site Saved:", siteLocation);
+  };
+
+  const handleCalculateResult = (index) => {
+    const selectedOption = selectedOptions[index];
+    const measurementData = measurements[index];
+    const result = calculateResult(selectedOption, measurementData);
+    const updatedResults = [...results];
+    updatedResults[index] = result;
+    setResults(updatedResults);
   };
 
   return (
@@ -265,7 +278,9 @@ function App() {
                   />
                 </td>
                 <td>
-                  <button className="save-btn" onClick={() => handleSaveEntry(index)}>Save</button>
+                  <button className="save-btn" onClick={() => { handleSaveEntry(index); handleCalculateResult(index); }}>
+                    Save
+                  </button>
                 </td>
               </tr>
             ))}
