@@ -18,7 +18,22 @@ const CalculationPopup = ({ selectedOption, onSave, onClose, calculateFor, onCal
   }, [calculateFor]);
 
   const convertToMeters = (value, unit) => value * unitConversion[unit];
-  const convertFromMeters = (value, unit) => value / unitConversion[unit];
+  const convertFromMeters = (value, unit) => {
+    switch (unit) {
+      case "meters":
+        return value;
+      case "feet":
+        return value / 0.3048;
+      case "inches":
+        return value / 0.0254;
+      case "yards":
+        return value / 0.9144;
+      case "centimeters":
+        return value / 0.01;
+      default:
+        return value; // Default fallback
+    }
+  };
 
   const handleInputChange = (key, value) => {
     setInputs((prev) => {
@@ -109,7 +124,7 @@ const CalculationPopup = ({ selectedOption, onSave, onClose, calculateFor, onCal
         value: input.value,  // The value entered by the user
       });
     }
-  
+
     // Pass the data back to the parent component
     onSave(convertedInputs);  // This passes the formatted measurements back to App.js
     onClose();  // Optionally close the popup
