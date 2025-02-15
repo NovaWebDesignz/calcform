@@ -1,13 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./CalculationPopup.css";
 
-const unitConversion = {
-  meters: 1,
-  feet: 0.3048,
-  inches: 0.0254,
-  yards: 0.9144,
-  centimeters: 0.01,
-};
+
 
 const CalculationPopup = ({ selectedOption, onSave, onClose, calculateFor, onCalculateForChange }) => {
   const [inputs, setInputs] = useState({});
@@ -17,23 +11,7 @@ const CalculationPopup = ({ selectedOption, onSave, onClose, calculateFor, onCal
     setCalculateForOption(calculateFor);
   }, [calculateFor]);
 
-  const convertToMeters = (value, unit) => value * unitConversion[unit];
-  const convertFromMeters = (value, unit) => {
-    switch (unit) {
-      case "meters":
-        return value;
-      case "feet":
-        return value / 0.3048;
-      case "inches":
-        return value / 0.0254;
-      case "yards":
-        return value / 0.9144;
-      case "centimeters":
-        return value / 0.01;
-      default:
-        return value; // Default fallback
-    }
-  };
+  
 
   const handleInputChange = (key, value) => {
     setInputs((prev) => {
@@ -46,25 +24,10 @@ const CalculationPopup = ({ selectedOption, onSave, onClose, calculateFor, onCal
   };
 
   const handleUnitChange = (key, newUnit) => {
-    setInputs((prevInputs) => {
-      const prevValue = prevInputs[key]?.value || 0;
-      const prevUnit = prevInputs[key]?.unit || "meters";
-
-      if (prevValue !== 0) {
-        const valueInMeters = convertToMeters(prevValue, prevUnit);
-        const convertedValue = convertFromMeters(valueInMeters, newUnit);
-
-        return {
-          ...prevInputs,
-          [key]: { value: convertedValue, unit: newUnit },
-        };
-      } else {
-        return {
-          ...prevInputs,
-          [key]: { value: 0, unit: newUnit },
-        };
-      }
-    });
+    setInputs((prevInputs) => ({
+      ...prevInputs,
+      [key]: { value: prevInputs[key]?.value || 0, unit: newUnit },
+    }));
   };
 
   const handleCalculateForChange = (e) => {
