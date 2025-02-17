@@ -26,16 +26,30 @@
   margin: 10px 0;
 }
 
+.popup .button-group {
+  display: flex;
+  justify-content: space-between;
+}
+
 .popup button {
-  display: block;
-  width: 100%;
   padding: 10px;
   margin-top: 10px;
-  background: red;
-  color: white;
-  border: none;
   cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  width: 48%; /* Ensure they share equal width */
 }
+
+.popup button:first-child {
+  background: #528528;
+  color: white;
+}
+
+.popup button:last-child {
+  background: #e1fdc9;
+  color: rgb(70, 66, 66);
+}
+
 .input-group {
   display: flex;
   flex-direction: column;
@@ -71,7 +85,7 @@ button {
   margin-top: 10px;
   margin-bottom: 11px;
   border: none;
-  background: #1d89fc;
+  background: #528528;
   color: white;
   border-radius: 5px;
   cursor: pointer;

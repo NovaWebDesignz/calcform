@@ -97,23 +97,26 @@ function App() {
   };
 
   const handleSaveMeasurements = (rowIndex, newMeasurements) => {
-    // Ensure newMeasurements is an array
     if (!Array.isArray(newMeasurements)) {
       console.error('Expected newMeasurements to be an array:', newMeasurements);
       return;
     }
   
-    // Format measurements data into a string representation
-    const formattedMeasurements = newMeasurements
-      .filter((item) => item.value !== "")  // Remove empty values
-      .map((item) => `${item.label} = ${item.value}`)  // Format as "Label = Value"
-      .join("\n");  // Join with new lines for better readability
+    // Convert array of measurements into an object with keys as expected by calculateResult
+    const formattedMeasurements = {};
+    newMeasurements.forEach((item) => {
+      formattedMeasurements[item.label.toLowerCase().replace(/ /g, "")] = {
+        value: parseFloat(item.value) || 0,
+      };
+    });
   
-    // Update the measurements state for the specific rowIndex
+    // Update state correctly
     const updatedMeasurements = [...measurements];
-    updatedMeasurements[rowIndex] = formattedMeasurements;  // Store the formatted string in the right index
+    updatedMeasurements[rowIndex] = formattedMeasurements;  // Store formatted object
+    setMeasurements(updatedMeasurements);
   
-    setMeasurements(updatedMeasurements);  // Update the state
+    // Automatically calculate results once measurements are saved
+    handleCalculateResult(rowIndex, formattedMeasurements);
   };
   
 
@@ -144,12 +147,24 @@ function App() {
     console.log("Site Saved:", siteLocation);
   };
 
-  const handleCalculateResult = (index) => {
+  const handleCalculateResult = (index, measurementData = null) => {
     const selectedOption = selectedOptions[index];
-    const measurementData = measurements[index];
-    const result = calculateResult(selectedOption, measurementData);
+    const measurementValues = measurementData || measurements[index]; // Use provided or stored measurements
+  
+    if (!measurementValues) {
+      console.error(`Missing measurement data for index ${index}`);
+      return;
+    }
+  
+    const result = calculateResult(selectedOption, measurementValues);
+  
+    // Ensure result is a string or number, not an object
+    const formattedResult = typeof result === 'object' 
+      ? JSON.stringify(result) // Convert object to string if necessary
+      : result;
+  
     const updatedResults = [...results];
-    updatedResults[index] = result;
+    updatedResults[index] = formattedResult; // Store as a string/number
     setResults(updatedResults);
   };
 
@@ -261,8 +276,15 @@ function App() {
                     <option value="stairs">Stairs</option>
                   </select>
                 </td>
-                <td>{measurements[index] || "Enter measurements"}</td>
-                <td>{results[index] || "N/A"}</td>
+                <td>
+                  {measurements[index] && typeof measurements[index] === "object"
+                    ? Object.entries(measurements[index])
+                      .map(([key, value]) => `${key}: ${value.value}`)
+                      .join(", ")
+                    : "Enter measurements"}
+                </td>
+
+                <td>{typeof results[index] === 'object' ? JSON.stringify(results[index]) : results[index]}</td>
                 <td>CBM</td>
                 <td>
                   <input

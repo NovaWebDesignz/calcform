@@ -167,7 +167,7 @@ const CalculationPopup = ({ selectedOption, onSave, onClose, calculateFor, onCal
         </div>
 
         <div className="button-group">
-          <button onClick={handleSave}>Save</button>
+          <button onClick={handleSave}>Calculate</button>
           <button onClick={onClose}>Close</button>
         </div>
       </div>
