@@ -2,6 +2,23 @@ import React, { useState, useEffect } from "react";
 import "./CalculationPopup.css";
 
 
+const convertToMeters = (value, unit) => {
+  const conversionFactors = {
+    meters: 1,
+    feet: 0.3048,
+    inches: 0.0254,
+    yards: 0.9144,
+    centimeters: 0.01,
+  };
+
+  const convertedValue = value * (conversionFactors[unit] || 1);
+  
+  // Round to 3 decimal places to avoid floating-point precision issues
+  return Math.round(convertedValue * 1000) / 1000;
+};
+
+
+
 
 const CalculationPopup = ({ selectedOption, onSave, onClose, calculateFor, onCalculateForChange }) => {
   const [inputs, setInputs] = useState({});
@@ -15,20 +32,29 @@ const CalculationPopup = ({ selectedOption, onSave, onClose, calculateFor, onCal
 
   const handleInputChange = (key, value) => {
     setInputs((prev) => {
-      const currentUnit = prev[key]?.unit || "meters";
+      const currentUnit = prev[key]?.unit || "meters";  // Get current unit (default is meters)
+      const convertedValue = convertToMeters(parseFloat(value) || 0, currentUnit);  // Convert value to meters
+  
       return {
         ...prev,
-        [key]: { value: parseFloat(value) || 0, unit: currentUnit },
+        [key]: { value: convertedValue, unit: currentUnit },
       };
     });
   };
+  
 
   const handleUnitChange = (key, newUnit) => {
-    setInputs((prevInputs) => ({
-      ...prevInputs,
-      [key]: { value: prevInputs[key]?.value || 0, unit: newUnit },
-    }));
+    setInputs((prevInputs) => {
+      const currentValue = prevInputs[key]?.value || 0;
+      const convertedValue = convertToMeters(currentValue, newUnit);  // Convert value to meters
+  
+      return {
+        ...prevInputs,
+        [key]: { value: convertedValue, unit: newUnit },
+      };
+    });
   };
+  
 
   const handleCalculateForChange = (e) => {
     const value = e.target.value;
@@ -39,6 +65,7 @@ const CalculationPopup = ({ selectedOption, onSave, onClose, calculateFor, onCal
   };
 
   const getInputFields = () => {
+    console.log("Selected Option:", selectedOption);  // Add this line to see the selected option in the log.
     switch (selectedOption) {
       case "slabs":
         return [
@@ -52,28 +79,31 @@ const CalculationPopup = ({ selectedOption, onSave, onClose, calculateFor, onCal
           { label: "Depth/Height (H)", key: "height" },
         ];
       case "circular":
-        return [
-          { label: "Outer Diameter (D1)", key: "outerDiameter" },
-          { label: "Inner Diameter (D2)", key: "innerDiameter" },
-          { label: "Length/Height (H)", key: "height" },
-        ];
-      case "curb":
-        return [
-          { label: "Curb Depth", key: "curbDepth" },
-          { label: "Gutter Width", key: "gutterWidth" },
-          { label: "Curb Height", key: "curbHeight" },
-          { label: "Flag Thickness", key: "flagThickness" },
-          { label: "Length", key: "length" },
-        ];
-      case "stairs":
-        return [
-          { label: "Run", key: "run" },
-          { label: "Rise", key: "rise" },
-          { label: "Width", key: "width" },
-          { label: "Platform Depth", key: "platformDepth" },
-          { label: "Number of Steps", key: "steps" },
-        ];
-      default:
+      console.log("Circular selected, returning inputs...");
+      return [
+        { label: "Outer Diameter (D1)", key: "outerDiameter" },
+        { label: "Inner Diameter (D2)", key: "innerDiameter" },
+        { label: "Length/Height (H)", key: "height" },
+      ];
+    case "curb":
+      console.log("Curb selected, returning inputs...");
+      return [
+        { label: "Curb Depth", key: "curbDepth" },
+        { label: "Gutter Width", key: "gutterWidth" },
+        { label: "Curb Height", key: "curbHeight" },
+        { label: "Flag Thickness", key: "flagThickness" },
+        { label: "Length", key: "length" },
+      ];
+    case "stairs":
+      console.log("Stairs selected, returning inputs...");
+      return [
+        { label: "Run", key: "run" },
+        { label: "Rise", key: "rise" },
+        { label: "Width", key: "width" },
+        { label: "Platform Depth", key: "platformDepth" },
+        { label: "Number of Steps", key: "steps" },
+      ];
+    default:
         return [];
     }
   };

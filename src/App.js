@@ -54,7 +54,7 @@ function App() {
           : "";
       case "holes":
         return inputs.diameter?.value && inputs.height?.value
-          ? (3.14 * (inputs.diameter.value / 2) * inputs.height.value).toFixed(2)  // Using the correct formula
+          ? (3.14 * Math.pow(inputs.diameter.value / 2, 2) * inputs.height.value).toFixed(2)  // Correct formula with squared radius
           : "";
       case "circular":
         if (inputs.outerDiameter?.value && inputs.innerDiameter?.value && inputs.height?.value) {
@@ -149,22 +149,27 @@ function App() {
 
   const handleCalculateResult = (index, measurementData = null) => {
     const selectedOption = selectedOptions[index];
-    const measurementValues = measurementData || measurements[index]; // Use provided or stored measurements
+    const measurementValues = measurementData || measurements[index];
   
     if (!measurementValues) {
       console.error(`Missing measurement data for index ${index}`);
       return;
     }
   
+    console.log('Calculating for:', selectedOption, measurementValues); // Debugging log
+  
     const result = calculateResult(selectedOption, measurementValues);
+    
+    // Log the result for debugging
+    console.log('Calculated result:', result);
   
     // Ensure result is a string or number, not an object
     const formattedResult = typeof result === 'object' 
       ? JSON.stringify(result) // Convert object to string if necessary
       : result;
-  
+    
     const updatedResults = [...results];
-    updatedResults[index] = formattedResult; // Store as a string/number
+    updatedResults[index] = formattedResult;
     setResults(updatedResults);
   };
 
@@ -246,11 +251,11 @@ function App() {
               <th>
                 <button className="action-btn" onClick={handleAddRow}>＋</button>
               </th>
-              <th>S.no</th>
-              <th>Type of Calculations</th>
+              <th>SI. No.</th>
+              <th>Concrete Structure</th>
               <th>Measurements</th>
-              <th>Results</th>
-              <th>Units</th>
+              <th>Required Qty.</th>
+              <th>Unit</th>
               <th>Remarks</th>
               <th>Save</th>
             </tr>
