@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./CalculationPopup.css";
 
-
+// Convert values based on unit selection
 const convertToMeters = (value, unit) => {
   const conversionFactors = {
     meters: 1,
@@ -12,13 +12,8 @@ const convertToMeters = (value, unit) => {
   };
 
   const convertedValue = value * (conversionFactors[unit] || 1);
-  
-  // Round to 3 decimal places to avoid floating-point precision issues
   return Math.round(convertedValue * 1000) / 1000;
 };
-
-
-
 
 const CalculationPopup = ({ selectedOption, onSave, onClose, calculateFor, onCalculateForChange }) => {
   const [inputs, setInputs] = useState({});
@@ -28,33 +23,32 @@ const CalculationPopup = ({ selectedOption, onSave, onClose, calculateFor, onCal
     setCalculateForOption(calculateFor);
   }, [calculateFor]);
 
-  
-
+  // Handle input change with validation and conversion
   const handleInputChange = (key, value) => {
-    setInputs((prev) => {
-      const currentUnit = prev[key]?.unit || "meters";  // Get current unit (default is meters)
-      const convertedValue = convertToMeters(parseFloat(value) || 0, currentUnit);  // Convert value to meters
-  
-      return {
-        ...prev,
-        [key]: { value: convertedValue, unit: currentUnit },
-      };
-    });
-  };
-  
+    const numericValue = parseFloat(value);
+    if (isNaN(numericValue) || value === "") {
+      return; // Do nothing if value is empty or invalid
+    }
 
-  const handleUnitChange = (key, newUnit) => {
-    setInputs((prevInputs) => {
-      const currentValue = prevInputs[key]?.value || 0;
-      const convertedValue = convertToMeters(currentValue, newUnit);  // Convert value to meters
-  
-      return {
-        ...prevInputs,
-        [key]: { value: convertedValue, unit: newUnit },
-      };
-    });
+    const currentUnit = inputs[key]?.unit || "meters"; // Get the current unit
+    const convertedValue = convertToMeters(numericValue, currentUnit);
+
+    setInputs((prev) => ({
+      ...prev,
+      [key]: { value: convertedValue, unit: currentUnit },
+    }));
   };
-  
+
+  // Handle unit change (converts values when unit is changed)
+  const handleUnitChange = (key, newUnit) => {
+    const currentValue = inputs[key]?.value || 0;
+    const convertedValue = convertToMeters(currentValue, newUnit);
+
+    setInputs((prevInputs) => ({
+      ...prevInputs,
+      [key]: { value: convertedValue, unit: newUnit },
+    }));
+  };
 
   const handleCalculateForChange = (e) => {
     const value = e.target.value;
@@ -64,8 +58,8 @@ const CalculationPopup = ({ selectedOption, onSave, onClose, calculateFor, onCal
     }
   };
 
+  // Define input fields based on selected option
   const getInputFields = () => {
-    console.log("Selected Option:", selectedOption);  // Add this line to see the selected option in the log.
     switch (selectedOption) {
       case "slabs":
         return [
@@ -79,48 +73,55 @@ const CalculationPopup = ({ selectedOption, onSave, onClose, calculateFor, onCal
           { label: "Depth/Height (H)", key: "height" },
         ];
       case "circular":
-      console.log("Circular selected, returning inputs...");
-      return [
-        { label: "Outer Diameter (D1)", key: "outerDiameter" },
-        { label: "Inner Diameter (D2)", key: "innerDiameter" },
-        { label: "Length/Height (H)", key: "height" },
-      ];
-    case "curb":
-      console.log("Curb selected, returning inputs...");
-      return [
-        { label: "Curb Depth", key: "curbDepth" },
-        { label: "Gutter Width", key: "gutterWidth" },
-        { label: "Curb Height", key: "curbHeight" },
-        { label: "Flag Thickness", key: "flagThickness" },
-        { label: "Length", key: "length" },
-      ];
-    case "stairs":
-      console.log("Stairs selected, returning inputs...");
-      return [
-        { label: "Run", key: "run" },
-        { label: "Rise", key: "rise" },
-        { label: "Width", key: "width" },
-        { label: "Platform Depth", key: "platformDepth" },
-        { label: "Number of Steps", key: "steps" },
-      ];
-    default:
+        return [
+          { label: "Outer Diameter (D1)", key: "outerDiameter" },
+          { label: "Inner Diameter (D2)", key: "innerDiameter" },
+          { label: "Length/Height (H)", key: "height" },
+        ];
+      case "curb":
+        return [
+          { label: "Curb Depth", key: "curbDepth" },
+          { label: "Gutter Width", key: "gutterWidth" },
+          { label: "Curb Height", key: "curbHeight" },
+          { label: "Flag Thickness", key: "flagThickness" },
+          { label: "Length", key: "length" },
+        ];
+      case "stairs":
+        return [
+          { label: "Run", key: "run" },
+          { label: "Rise", key: "rise" },
+          { label: "Width", key: "width" },
+          { label: "Platform Depth", key: "platformDepth" },
+          { label: "Number of Steps", key: "steps" },
+        ];
+      default:
         return [];
     }
   };
 
+  // Handle saving the data and passing it back to the parent
   const handleSave = () => {
-    // Create the measurements data from user input
     const convertedInputs = [];
+    let isValid = true;
+
+    // Iterate over inputs to check validity and prepare the data
     for (const [key, input] of Object.entries(inputs)) {
+      if (!input.value) {
+        isValid = false;
+      }
       convertedInputs.push({
-        label: key,  // The input label, e.g., 'Length', 'Width', etc.
-        value: input.value,  // The value entered by the user
+        label: key,
+        value: input.value,
       });
     }
 
-    // Pass the data back to the parent component
-    onSave(convertedInputs);  // This passes the formatted measurements back to App.js
-    onClose();  // Optionally close the popup
+    if (!isValid) {
+      alert("Invalid Inputs"); // Alert if inputs are missing or invalid
+      return;
+    }
+
+    onSave(convertedInputs);
+    onClose();
   };
 
   return (

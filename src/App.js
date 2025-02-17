@@ -86,9 +86,9 @@ function App() {
           inputs.width?.value &&
           inputs.run?.value
         ) {
-          const volumeUnderPlatform = inputs.platformDepth.value * (inputs.rise.value * inputs.steps.value) * inputs.width.value;
-          const volumeUnderSteps = inputs.run.value * (inputs.rise.value * inputs.steps.value) * inputs.width.value;
-          return (volumeUnderPlatform + volumeUnderSteps).toFixed(2);
+          const stepVolume = inputs.run.value * inputs.rise.value * inputs.width.value;
+          const platformVolume = inputs.platformDepth.value * inputs.rise.value * inputs.width.value;
+          return ((stepVolume * inputs.steps.value) + platformVolume).toFixed(2);
         }
         return "";
       default:
