@@ -29,6 +29,7 @@
 .popup .button-group {
   display: flex;
   justify-content: space-between;
+  gap: 10px; /* Adds space between the buttons */
 }
 
 .popup button {
@@ -36,19 +37,21 @@
   margin-top: 10px;
   cursor: pointer;
   border: none;
-  border-radius: 5px;
-  width: 48%; /* Ensure they share equal width */
+  border-radius: 2px;
 }
 
 .popup button:first-child {
   background: #528528;
   color: white;
+  width: 55%; /* Increase width for the "Calculate" button */
 }
 
 .popup button:last-child {
   background: #e1fdc9;
   color: rgb(70, 66, 66);
+  width: 40%; /* Adjust width for the "Close" button */
 }
+
 
 .input-group {
   display: flex;
