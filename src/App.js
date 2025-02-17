@@ -54,47 +54,29 @@ function App() {
           : "";
       case "holes":
         return inputs.diameter?.value && inputs.height?.value
-          ? (3.14 * Math.pow(inputs.diameter.value / 2, 2) * inputs.height.value).toFixed(2)  // Correct formula with squared radius
+          ? (3.14 * Math.pow(inputs.diameter.value / 2, 2) * inputs.height.value).toFixed(2)
           : "";
       case "circular":
-        if (inputs.outerDiameter?.value && inputs.innerDiameter?.value && inputs.height?.value) {
-          const outerRadius = inputs.outerDiameter.value / 2;
-          const innerRadius = inputs.innerDiameter.value / 2;
-          const height = inputs.height.value;
-          const volume = 3.14 * (Math.pow(outerRadius, 2) - Math.pow(innerRadius, 2)) * height;
-          return volume.toFixed(2); // Round to two decimal places
-        }
-        return "";
+        return inputs.outerDiameter?.value && inputs.innerDiameter?.value && inputs.height?.value
+          ? (3.14 * (Math.pow(inputs.outerDiameter.value / 2, 2) - Math.pow(inputs.innerDiameter.value / 2, 2)) * inputs.height.value).toFixed(2)
+          : "";
+          
+
       case "curb":
-        if (
-          inputs.curbDepth?.value &&
-          inputs.curbHeight?.value &&
-          inputs.flagThickness?.value &&
-          inputs.length?.value &&
-          inputs.gutterWidth?.value
-        ) {
-          const volumeUnderCurb = inputs.curbDepth.value * (inputs.curbHeight.value + inputs.flagThickness.value) * inputs.length.value;
-          const volumeUnderGutter = inputs.gutterWidth.value * inputs.flagThickness.value * inputs.length.value;
-          return (volumeUnderCurb + volumeUnderGutter).toFixed(2);
-        }
-        return "";
+        return inputs.curbDepth?.value && inputs.curbHeight?.value && inputs.flagThickness?.value && inputs.length?.value
+          ? ((inputs.curbDepth.value * (inputs.curbHeight.value + inputs.flagThickness.value)) * inputs.length.value).toFixed(2)
+          : "";
+              
+          
       case "stairs":
-        if (
-          inputs.platformDepth?.value &&
-          inputs.rise?.value &&
-          inputs.steps?.value &&
-          inputs.width?.value &&
-          inputs.run?.value
-        ) {
-          const stepVolume = inputs.run.value * inputs.rise.value * inputs.width.value;
-          const platformVolume = inputs.platformDepth.value * inputs.rise.value * inputs.width.value;
-          return ((stepVolume * inputs.steps.value) + platformVolume).toFixed(2);
-        }
-        return "";
+        return inputs.run?.value && inputs.rise?.value && inputs.width?.value && inputs.steps?.value
+          ? (inputs.run.value * inputs.rise.value * inputs.width.value * inputs.steps.value).toFixed(2)
+          : "";
       default:
         return "";
     }
   };
+  
 
   const handleSaveMeasurements = (rowIndex, newMeasurements) => {
     if (!Array.isArray(newMeasurements)) {
