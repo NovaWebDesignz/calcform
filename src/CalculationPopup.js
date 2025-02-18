@@ -74,8 +74,8 @@ const CalculationPopup = ({ selectedOption, onSave, onClose, calculateFor, onCal
         ];
       case "circular":
         return [
-          { label: "Outer Diameter (D1)", key: "outerDiameter" },
-          { label: "Inner Diameter (D2)", key: "innerDiameter" },
+          { label: "Outer Diameter (D1)", key: "outerdiameter" },
+          { label: "Inner Diameter (D2)", key: "innerdiameter" },
           { label: "Length/Height (H)", key: "height" },
         ];
       case "curb":
@@ -149,14 +149,14 @@ const CalculationPopup = ({ selectedOption, onSave, onClose, calculateFor, onCal
             )}
             {selectedOption === "circular" && (
               <>
-                <option value="circularSlab">Circular Slab</option>
+                <option value="circularslab">Circular</option>
                 <option value="tube">Tube</option>
               </>
             )}
             {selectedOption === "curb" && (
               <>
                 <option value="curb">Curb</option>
-                <option value="gutterBarrier">Gutter Barrier</option>
+                <option value="gutter">Gutter</option>
               </>
             )}
             {selectedOption === "stairs" && (

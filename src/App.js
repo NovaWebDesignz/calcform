@@ -46,35 +46,79 @@ function App() {
     }, 50);
   };
 
-  const calculateResult = (option, inputs) => {
-    switch (option) {
-      case "slabs":
-        return inputs.length?.value && inputs.width?.value && inputs.height?.value
-          ? (inputs.length.value * inputs.width.value * inputs.height.value).toFixed(2)
-          : "";
-      case "holes":
-        return inputs.diameter?.value && inputs.height?.value
-          ? (3.14 * Math.pow(inputs.diameter.value / 2, 2) * inputs.height.value).toFixed(2)
-          : "";
-          
-      case "circular":
-        return inputs.outerDiameter?.value && inputs.innerDiameter?.value && inputs.height?.value
-          ? (3.14 * (Math.pow(inputs.outerDiameter.value / 2, 2) - Math.pow(inputs.innerDiameter.value / 2, 2)) * inputs.height.value).toFixed(2)
-          : "";
-          
+  const getValue = (obj, key) => (obj?.[key]?.value !== undefined ? obj[key].value : 0);
 
-      case "curb":
-        return inputs.curbDepth?.value && inputs.curbHeight?.value && inputs.flagThickness?.value && inputs.length?.value
-          ? ((inputs.curbDepth.value * (inputs.curbHeight.value + inputs.flagThickness.value)) * inputs.length.value).toFixed(2)
-          : "";
-              
-          
-      case "stairs":
-        return inputs.run?.value && inputs.rise?.value && inputs.width?.value && inputs.steps?.value
-          ? (inputs.run.value * inputs.rise.value * inputs.width.value * inputs.steps.value).toFixed(2)
-          : "";
-      default:
-        return "";
+const calculateResult = (option, inputs) => {
+    switch (option) {
+        case "slabs":
+            return (
+                getValue(inputs, "length") * 
+                getValue(inputs, "width") * 
+                getValue(inputs, "height")
+            ).toFixed(2);
+        
+        case "holes":
+            return (
+                3.14 * 
+                Math.pow(getValue(inputs, "diameter") / 2, 2) * 
+                getValue(inputs, "height")
+            ).toFixed(2);
+        
+        case "circular":
+            console.log("Circular Calculation Input:", JSON.stringify(inputs, null, 2));
+
+            const outerD = getValue(inputs, "outerdiameter");
+            const innerD = getValue(inputs, "innerdiameter");
+            const height = getValue(inputs, "height");
+
+            if (!outerD || !innerD || !height) {
+                console.error("Missing required inputs for circular:", { outerD, innerD, height });
+                return "Error: Missing values";
+            }
+
+            if (outerD <= innerD) {
+                console.error("Invalid input: Outer diameter must be greater than inner diameter");
+                return "Error: OuterD must be > InnerD";
+            }
+
+            return (3.14 * (Math.pow(outerD / 2, 2) - Math.pow(innerD / 2, 2)) * height).toFixed(2);
+        
+        case "curb":
+            console.log("Curb Calculation Input:", JSON.stringify(inputs, null, 2));
+
+            const curbDepth = getValue(inputs, "curbdepth");
+            const curbHeight = getValue(inputs, "curbheight");
+            const flagThickness = getValue(inputs, "flagthickness");
+            const gutterWidth = getValue(inputs, "gutterwidth");
+            const length = getValue(inputs, "length");
+
+            if (!curbDepth || !curbHeight || !flagThickness || !length || !gutterWidth) {
+                console.error("Missing required inputs for curb:", { curbDepth, curbHeight, flagThickness, length, gutterWidth });
+                return "Error: Missing values";
+            }
+
+            // Calculate Volume Under Curb
+            const volumeUnderCurb = curbDepth * (curbHeight + flagThickness) * length;
+            // Calculate Volume Under Gutter
+            const volumeUnderGutter = gutterWidth * flagThickness * length;
+    
+            // Total Volume
+            const totalVolume = (volumeUnderCurb + volumeUnderGutter).toFixed(2);
+
+            console.log("Calculated Total Volume:", totalVolume);
+
+            return totalVolume;
+        
+        case "stairs":
+            return (
+                getValue(inputs, "run") * 
+                getValue(inputs, "rise") * 
+                getValue(inputs, "width") * 
+                getValue(inputs, "steps")
+            ).toFixed(2);
+        
+        default:
+            return "";
     }
   };
   
@@ -133,24 +177,23 @@ function App() {
   const handleCalculateResult = (index, measurementData = null) => {
     const selectedOption = selectedOptions[index];
     const measurementValues = measurementData || measurements[index];
-  
+
     if (!measurementValues) {
-      console.error(`Missing measurement data for index ${index}`);
-      return;
+        console.error(`Missing measurement data for index ${index}`);
+        return;
     }
-  
-    console.log('Calculating for:', selectedOption, measurementValues); // Debugging log
-  
+
+    console.log('Calculating for:', selectedOption, measurementValues); // ✅ Debugging log
+
     const result = calculateResult(selectedOption, measurementValues);
-    
+
     // Log the result for debugging
-    console.log('Calculated result:', result);
-  
-    // Ensure result is a string or number, not an object
+    console.log('Calculated result:', result); // ✅ Debugging log
+
     const formattedResult = typeof result === 'object' 
-      ? JSON.stringify(result) // Convert object to string if necessary
-      : result;
-    
+        ? JSON.stringify(result) 
+        : result;
+
     const updatedResults = [...results];
     updatedResults[index] = formattedResult;
     setResults(updatedResults);
