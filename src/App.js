@@ -284,7 +284,7 @@ function App() {
                       newRemarks[index] = e.target.value;
                       setRemarks(newRemarks);
                     }}
-                  />
+                  /> 
                 </td>
                 <td>
                   <button className="save-btn" onClick={() => { handleSaveEntry(index); handleCalculateResult(index); }}>
