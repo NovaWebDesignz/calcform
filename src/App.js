@@ -56,6 +56,7 @@ function App() {
         return inputs.diameter?.value && inputs.height?.value
           ? (3.14 * Math.pow(inputs.diameter.value / 2, 2) * inputs.height.value).toFixed(2)
           : "";
+          
       case "circular":
         return inputs.outerDiameter?.value && inputs.innerDiameter?.value && inputs.height?.value
           ? (3.14 * (Math.pow(inputs.outerDiameter.value / 2, 2) - Math.pow(inputs.innerDiameter.value / 2, 2)) * inputs.height.value).toFixed(2)
@@ -239,7 +240,7 @@ function App() {
               <th>Required Qty.</th>
               <th>Unit</th>
               <th>Remarks</th>
-              <th>Save</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -306,7 +307,7 @@ function App() {
               <th>Required Qty.</th>
               <th>Unit</th>
               <th>Remarks</th>
-              <th>Remove</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -315,9 +316,15 @@ function App() {
                 <tr key={index}>
                   <td>{index + 1}</td>
                   <td>{entry.structure}</td>
-                  <td>{entry.measurement}</td>
+                  <td>
+                    {typeof entry.measurement === "object"
+                      ? Object.entries(entry.measurement)
+                        .map(([key, value]) => `${key}: ${value.value}`)
+                        .join(", ")
+                      : entry.measurement}
+                  </td>
                   <td>{entry.requiredQty}</td>
-                  <td>{entry.unit}</td>
+                  <td>m³</td>
                   <td>{entry.remarks}</td>
                   <td>
                     <button className="remove-entry-btn" onClick={() => handleRemoveSavedEntry(index)}>

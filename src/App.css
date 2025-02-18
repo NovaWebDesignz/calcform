@@ -59,7 +59,7 @@ h1 {
 
 .saved-entries-table th, .saved-entries-table td {
   border: 1px solid #000;
-  padding: 10px;
+  padding: 1px;
   text-align: center;
   font-size: 16px;
 }
