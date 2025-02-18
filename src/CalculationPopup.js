@@ -35,7 +35,7 @@ const CalculationPopup = ({ selectedOption, onSave, onClose, calculateFor, onCal
 
     setInputs((prev) => ({
       ...prev,
-      [key]: { value: convertedValue, unit: currentUnit },
+      [key]: { value: numericValue, unit: currentUnit, convertedValue },
     }));
   };
 
@@ -46,7 +46,7 @@ const CalculationPopup = ({ selectedOption, onSave, onClose, calculateFor, onCal
 
     setInputs((prevInputs) => ({
       ...prevInputs,
-      [key]: { value: convertedValue, unit: newUnit },
+      [key]: { value: currentValue, unit: newUnit, convertedValue },
     }));
   };
 
@@ -106,12 +106,12 @@ const CalculationPopup = ({ selectedOption, onSave, onClose, calculateFor, onCal
 
     // Iterate over inputs to check validity and prepare the data
     for (const [key, input] of Object.entries(inputs)) {
-      if (!input.value) {
+      if (!input.convertedValue) {
         isValid = false;
       }
       convertedInputs.push({
         label: key,
-        value: input.value,
+        value: input.convertedValue,
       });
     }
 
