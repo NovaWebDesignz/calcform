@@ -272,7 +272,7 @@ function App() {
                 </td>
 
                 <td>{typeof results[index] === 'object' ? JSON.stringify(results[index]) : results[index]}</td>
-                <td>CBM</td>
+                <td>m³</td>
                 <td>
                   <input
                     type="text"
