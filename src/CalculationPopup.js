@@ -67,12 +67,12 @@ const CalculationPopup = ({ selectedOption, onSave, onClose, calculateFor, onCal
           { label: "Width (W)", key: "width" },
           { label: "Thickness/Height (H)", key: "height" },
         ];
-      case "pile":
+      case "holes":
         return [
           { label: "Diameter (D)", key: "diameter" },
           { label: "Depth/Height (H)", key: "height" },
         ];
-      case "holes":
+      case "circular":
         return [
           { label: "Outer Diameter (D1)", key: "outerdiameter" },
           { label: "Inner Diameter (D2)", key: "innerdiameter" },
@@ -140,18 +140,19 @@ const CalculationPopup = ({ selectedOption, onSave, onClose, calculateFor, onCal
                 <option value="squareColumn">Square Column</option>
               </>
             )}
-            {selectedOption === "pile" && (
+            {selectedOption === "holes" && (
               <>
-                <option value="hole">Pile</option>
+                <option value="hole">Holes</option>
+                <option value="pile">Pile</option>
                 <option value="column">Column</option>
                 <option value="roundFooting">Round Footing</option>
               </>
             )}
-            {selectedOption === "holes" && (
+            {selectedOption === "circular" && (
               <>
-                <option value="hole">Holes</option>
                 <option value="circularslab">Circular</option>
                 <option value="tube">Tube</option>
+                <option value="hollowcylinder">Hollow Cylinder</option>
               </>
             )}
             {selectedOption === "curb" && (

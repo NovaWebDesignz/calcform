@@ -57,14 +57,14 @@ const calculateResult = (option, inputs) => {
                 getValue(inputs, "height")
             ).toFixed(2);
         
-        case "pile":
+        case "holes":
             return (
                 3.14 * 
                 Math.pow(getValue(inputs, "diameter") / 2, 2) * 
                 getValue(inputs, "height")
             ).toFixed(2);
         
-        case "holes":
+        case "circular":
             console.log("Circular Calculation Input:", JSON.stringify(inputs, null, 2));
 
             const outerD = getValue(inputs, "outerdiameter");
@@ -301,8 +301,8 @@ const calculateResult = (option, inputs) => {
                   >
                     <option value="">Select Calculation</option>
                     <option value="slabs">Slabs, Square Footings, or Walls</option>
-                    <option value="pile">Pile, Column, or Round Footings</option>
-                    <option value="holes">Holes, Circular Slab or Tube</option>
+                    <option value="holes">Holes, Pile, Column, or Round Footings</option>
+                    <option value="circular">Circular Slab, Tube, Hollow Cylinder</option>
                     <option value="curb">Curb and Gutter Barrier</option>
                     <option value="stairs">Stairs</option>
                   </select>
