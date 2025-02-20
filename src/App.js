@@ -125,23 +125,24 @@ const calculateResult = (option, inputs) => {
 
   const handleSaveMeasurements = (rowIndex, newMeasurements) => {
     if (!Array.isArray(newMeasurements)) {
-      console.error('Expected newMeasurements to be an array:', newMeasurements);
-      return;
+        console.error('Expected newMeasurements to be an array:', newMeasurements);
+        return;
     }
-  
+
     // Convert array of measurements into an object with keys as expected by calculateResult
     const formattedMeasurements = {};
     newMeasurements.forEach((item) => {
-      formattedMeasurements[item.label.toLowerCase().replace(/ /g, "")] = {
-        value: parseFloat(item.value) || 0,
-      };
+        formattedMeasurements[item.label.toLowerCase().replace(/ /g, "")] = {
+            value: parseFloat(item.value) || 0,
+            unit: item.unit || "" // ✅ Ensure unit is stored
+        };
     });
-  
+
     // Update state correctly
     const updatedMeasurements = [...measurements];
-    updatedMeasurements[rowIndex] = formattedMeasurements;  // Store formatted object
+    updatedMeasurements[rowIndex] = formattedMeasurements;
     setMeasurements(updatedMeasurements);
-  
+
     // Automatically calculate results once measurements are saved
     handleCalculateResult(rowIndex, formattedMeasurements);
   };
@@ -149,11 +150,13 @@ const calculateResult = (option, inputs) => {
 
   const handleSaveEntry = (index) => {
     const newEntry = {
-      structure: selectedOptions[index] || "N/A",
-      measurement: measurements[index] || "N/A",
-      requiredQty: results[index] || "N/A",
-      unit: "CBM",
-      remarks: remarks[index] || "",
+        structure: selectedOptions[index] || "N/A",
+        measurement: measurements[index] 
+            ? measurements[index].map((m) => `${m.label}: ${m.value} ${m.unit || ""}`).join(", ") 
+            : "N/A", // ✅ Store measurements properly with units
+        requiredQty: results[index] || "N/A",
+        unit: "CBM",
+        remarks: remarks[index] || "",
     };
 
     setSavedEntries([newEntry, ...savedEntries]); // Add new entry at the top
@@ -310,10 +313,12 @@ const calculateResult = (option, inputs) => {
                 <td>
                   {measurements[index] && typeof measurements[index] === "object"
                     ? Object.entries(measurements[index])
-                      .map(([key, value]) => `${key}: ${value.value}`)
+                      .map(([key, value]) => `${key}: ${value.value} ${value.unit || ""}`) // ✅ Ensure correct structure
                       .join(", ")
                     : "Enter measurements"}
                 </td>
+
+
 
                 <td>{typeof results[index] === 'object' ? JSON.stringify(results[index]) : results[index]}</td>
                 <td>m³</td>

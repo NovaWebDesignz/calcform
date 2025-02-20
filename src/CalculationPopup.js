@@ -106,23 +106,25 @@ const CalculationPopup = ({ selectedOption, onSave, onClose, calculateFor, onCal
 
     // Iterate over inputs to check validity and prepare the data
     for (const [key, input] of Object.entries(inputs)) {
-      if (!input.convertedValue) {
-        isValid = false;
-      }
-      convertedInputs.push({
-        label: key,
-        value: input.convertedValue,
-      });
+        if (!input.convertedValue || !input.unit) { // Ensure unit is present
+            isValid = false;
+        }
+        convertedInputs.push({
+            label: key,
+            value: input.convertedValue,
+            unit: input.unit, // ✅ Store unit properly
+        });
     }
 
     if (!isValid) {
-      alert("Invalid Inputs"); // Alert if inputs are missing or invalid
-      return;
+        alert("Invalid Inputs"); // Alert if inputs are missing or invalid
+        return;
     }
 
     onSave(convertedInputs);
     onClose();
-  };
+};
+
 
   return (
     <div className="popup-overlay">
