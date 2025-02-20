@@ -149,18 +149,24 @@ const calculateResult = (option, inputs) => {
   
 
   const handleSaveEntry = (index) => {
+    const measurementObj = measurements[index];
+
+    const formattedMeasurement = measurementObj 
+        ? Object.entries(measurementObj)
+            .map(([key, value]) => `${key}: ${value.value} ${value.unit || ""}`)
+            .join(", ")
+        : "N/A";
+
     const newEntry = {
         structure: selectedOptions[index] || "N/A",
-        measurement: measurements[index] 
-            ? measurements[index].map((m) => `${m.label}: ${m.value} ${m.unit || ""}`).join(", ") 
-            : "N/A", // ✅ Store measurements properly with units
+        measurement: formattedMeasurement, // ✅ Corrected
         requiredQty: results[index] || "N/A",
         unit: "CBM",
         remarks: remarks[index] || "",
     };
 
     setSavedEntries([newEntry, ...savedEntries]); // Add new entry at the top
-  };
+};
 
   const handleRemoveSavedEntry = (index) => {
     const updatedEntries = savedEntries.filter((_, i) => i !== index);

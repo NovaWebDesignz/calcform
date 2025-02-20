@@ -100,7 +100,7 @@ const CalculationPopup = ({ selectedOption, onSave, onClose, calculateFor, onCal
   };
 
   // Handle saving the data and passing it back to the parent
-  const handleSave = () => {
+const handleSave = () => {
     const convertedInputs = [];
     let isValid = true;
 
