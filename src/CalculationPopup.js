@@ -132,7 +132,7 @@ const handleSave = () => {
         <h2>{selectedOption} Measurements</h2>
 
         <div className="input-group">
-          <label>Calculate For</label>
+          <label>Concrete Structure</label>
           <select value={calculateForOption} onChange={handleCalculateForChange}>
             {selectedOption === "slabs" && (
               <>
