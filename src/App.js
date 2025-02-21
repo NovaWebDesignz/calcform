@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import "./App.css";
 import CalculationPopup from "./CalculationPopup";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 
 function App() {
   const [visibleRows, setVisibleRows] = useState(0);
@@ -208,6 +210,43 @@ const calculateResult = (option, inputs) => {
     setResults(updatedResults);
   };
 
+  const generatePDF = () => {
+    const doc = new jsPDF();
+  
+    // Title
+    doc.setFontSize(18);
+    doc.text("Concrete Calculator Report", 14, 20);
+  
+    // Customer Information
+    doc.setFontSize(14);
+    doc.text("Customer Details:", 14, 30);
+    doc.setFontSize(12);
+    doc.text(`Name: ${customerName || "N/A"}`, 14, 40);
+    doc.text(`Contact: ${customerContact || "N/A"}`, 14, 50);
+    doc.text(`Site Location: ${siteLocation || "N/A"}`, 14, 60);
+  
+    // Saved Entries Table
+    if (savedEntries.length > 0) {
+      doc.autoTable({
+        startY: 70,
+        head: [["Sl. No.", "Structure", "Measurement", "Required Qty.", "Unit", "Remarks"]],
+        body: savedEntries.map((entry, index) => [
+          index + 1,
+          entry.structure,
+          entry.measurement,
+          entry.requiredQty,
+          "m³",
+          entry.remarks,
+        ]),
+      });
+    } else {
+      doc.text("No saved entries.", 14, 70);
+    }
+  
+    // Save the PDF
+    doc.save("Concrete_Calculator_Report.pdf");
+  };
+
   return (
     <div className="App">
       <header className="App-header">
@@ -324,6 +363,8 @@ const calculateResult = (option, inputs) => {
             )}
           </tbody>
         </table>
+
+        <button onClick={generatePDF}>Download PDF</button>
 
         {/* MAIN FORM TABLE */}
         <table className="calculator-table">
