@@ -212,40 +212,55 @@ const calculateResult = (option, inputs) => {
 
   const generatePDF = () => {
     const doc = new jsPDF();
-  
+
     // Title
     doc.setFontSize(18);
     doc.text("Concrete Calculator Report", 14, 20);
-  
+
     // Customer Information
     doc.setFontSize(14);
     doc.text("Customer Details:", 14, 30);
     doc.setFontSize(12);
-    doc.text(`Name: ${customerName || "N/A"}`, 14, 40);
-    doc.text(`Contact: ${customerContact || "N/A"}`, 14, 50);
-    doc.text(`Site Location: ${siteLocation || "N/A"}`, 14, 60);
-  
+
+    // Define alignment positions
+    const labelX = 14;
+    const valueX = 50; // Adjust this value for better alignment
+
+    doc.text("Name:", labelX, 40);
+    doc.text(`${customerName || "N/A"}`, valueX, 40);
+
+    doc.text("Contact:", labelX, 50);
+    doc.text(`${customerContact || "N/A"}`, valueX, 50);
+
+    doc.text("Site Location:", labelX, 60);
+    doc.text(`${siteLocation || "N/A"}`, valueX, 60);
+
     // Saved Entries Table
     if (savedEntries.length > 0) {
-      doc.autoTable({
-        startY: 70,
-        head: [["Sl. No.", "Structure", "Measurement", "Required Qty.", "Unit", "Remarks"]],
-        body: savedEntries.map((entry, index) => [
-          index + 1,
-          entry.structure,
-          entry.measurement,
-          entry.requiredQty,
-          "m³",
-          entry.remarks,
-        ]),
-      });
+        doc.autoTable({
+            startY: 70,
+            head: [["Sl. No.", "Structure", "Measurement", "Required Qty.", "Unit", "Remarks"]],
+            body: savedEntries.map((entry, index) => [
+                index + 1,
+                entry.structure,
+                entry.measurement,
+                entry.requiredQty,
+                "m³",
+                entry.remarks,
+            ]),
+            styles: { halign: "center" }, // Center align all content
+            headStyles: { halign: "center" }, // Center align headers
+            columnStyles: {
+              2: { cellWidth: 40 },  // Measurement
+            }
+        });
     } else {
-      doc.text("No saved entries.", 14, 70);
+        doc.text("No saved entries.", 14, 70);
     }
-  
+
     // Save the PDF
     doc.save("Concrete_Calculator_Report.pdf");
-  };
+};
 
   return (
     <div className="App">
