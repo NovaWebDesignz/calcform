@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./CalculationPopup.css";
 
+
 // Convert values based on unit selection
 const convertToMeters = (value, unit) => {
   const conversionFactors = {
@@ -17,11 +18,28 @@ const convertToMeters = (value, unit) => {
 
 const CalculationPopup = ({ selectedOption, onSave, onClose, calculateFor, onCalculateForChange }) => {
   const [inputs, setInputs] = useState({});
-  const [calculateForOption, setCalculateForOption] = useState(calculateFor || "");
+  const [calculateForOption, setCalculateForOption] = useState(() => {
+    if (calculateFor) return calculateFor;
+    if (selectedOption === "slabs") return "slab";
+    if (selectedOption === "holes") return "hole";
+    if (selectedOption === "circular") return "circularslab";
+    if (selectedOption === "curb") return "curb";
+    if (selectedOption === "stairs") return "staircase";
+    return "";
+  });
 
   useEffect(() => {
-    setCalculateForOption(calculateFor);
-  }, [calculateFor]);
+    if (!calculateFor) {
+      // Set default based on selected option
+      if (selectedOption === "slabs") setCalculateForOption("slab");
+      else if (selectedOption === "holes") setCalculateForOption("hole");
+      else if (selectedOption === "circular") setCalculateForOption("circularslab");
+      else if (selectedOption === "curb") setCalculateForOption("curb");
+      else if (selectedOption === "stairs") setCalculateForOption("staircase");
+    } else {
+      setCalculateForOption(calculateFor);
+    }
+  }, [selectedOption, calculateFor]); // Re-run when selectedOption or calculateFor changes
 
   // Handle input change with validation and conversion
   const handleInputChange = (key, value) => {
@@ -125,6 +143,24 @@ const handleSave = () => {
     onClose();
 };
 
+const imageMap = {
+  slab: "/images/slab_image.jpg",
+  wall: "/images/wall_image.jpg",
+  squareFooting: "/images/square_footing_image.jpg",
+  squareColumn: "/images/square_column_image.jpg",
+  hole: "/images/hole_image.jpg",
+  pile: "/images/pile_image.jpg",
+  column: "/images/column_image.jpg",
+  roundFooting: "/images/round_footing_image.jpg",
+  circularslab: "/images/circular_slab_image.jpg",
+  tube: "/images/tube_image.jpg",
+  hollowcylinder: "/images/hollow_cylinder_image.jpg",
+  curb: "/images/curb_image.jpg",
+  gutter: "/images/curb_image.jpg",
+  staircase: "/images/steps_image.jpg",
+  steps: "/images/steps_image.jpg",
+};
+
 
   return (
     <div className="popup-overlay">
@@ -170,7 +206,14 @@ const handleSave = () => {
               </>
             )}
           </select>
+          {/* Display image for selected structure */}
+          {calculateForOption && imageMap[calculateForOption] && (
+            <div className="image-container">
+              <img src={imageMap[calculateForOption]} alt={calculateForOption} className="option-image" />
+            </div>
+          )}
         </div>
+
 
         {getInputFields().map(({ label, key }) => (
           <div key={key} className="input-group">
