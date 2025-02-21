@@ -2,7 +2,7 @@
   text-align: center;
   font-family: Arial, sans-serif;
   padding: 10px;
-  padding-top: 100px;
+  padding-top: 40px;
   padding-bottom: 800px;
   background-color: #f9f9f9;
   min-height: 10vh;
@@ -54,7 +54,7 @@ h1 {
   width: 100%;
   border-collapse: collapse;
   margin-top: 50px;
-  margin-bottom: 180px;
+  margin-bottom: 50px;
 }
 
 .saved-entries-table th, .saved-entries-table td {

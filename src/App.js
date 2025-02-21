@@ -279,6 +279,52 @@ const calculateResult = (option, inputs) => {
           </tbody>
         </table>
 
+        {/* NEW TABLE FOR SAVED ENTRIES */}
+        <table className="saved-entries-table">
+          <thead>
+            <tr>
+              <th>Sl. No.</th>
+              <th>Structure</th>
+              <th>Measurement</th>
+              <th>Required Qty.</th>
+              <th>Unit</th>
+              <th>Remarks</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {savedEntries.length > 0 ? (
+              savedEntries.map((entry, index) => (
+                <tr key={index}>
+                  <td>{index + 1}</td>
+                  <td>{entry.structure}</td>
+                  <td>
+                    {typeof entry.measurement === "object"
+                      ? Object.entries(entry.measurement)
+                        .map(([key, value]) => `${key}: ${value.value}`)
+                        .join(", ")
+                      : entry.measurement}
+                  </td>
+                  <td>{entry.requiredQty}</td>
+                  <td>m³</td>
+                  <td>{entry.remarks}</td>
+                  <td>
+                    <button className="remove-entry-btn" onClick={() => handleRemoveSavedEntry(index)}>
+                      <i className="fa fa-trash"></i> {/* Trash bin icon */}
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="7" style={{ textAlign: "center", fontStyle: "italic" }}>
+                  No entries yet
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+
         {/* MAIN FORM TABLE */}
         <table className="calculator-table">
           <thead>
@@ -348,52 +394,6 @@ const calculateResult = (option, inputs) => {
                 </td>
               </tr>
             ))}
-          </tbody>
-        </table>
-
-        {/* NEW TABLE FOR SAVED ENTRIES */}
-        <table className="saved-entries-table">
-          <thead>
-            <tr>
-              <th>Sl. No.</th>
-              <th>Structure</th>
-              <th>Measurement</th>
-              <th>Required Qty.</th>
-              <th>Unit</th>
-              <th>Remarks</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {savedEntries.length > 0 ? (
-              savedEntries.map((entry, index) => (
-                <tr key={index}>
-                  <td>{index + 1}</td>
-                  <td>{entry.structure}</td>
-                  <td>
-                    {typeof entry.measurement === "object"
-                      ? Object.entries(entry.measurement)
-                        .map(([key, value]) => `${key}: ${value.value}`)
-                        .join(", ")
-                      : entry.measurement}
-                  </td>
-                  <td>{entry.requiredQty}</td>
-                  <td>m³</td>
-                  <td>{entry.remarks}</td>
-                  <td>
-                    <button className="remove-entry-btn" onClick={() => handleRemoveSavedEntry(index)}>
-                      <i className="fa fa-trash"></i> {/* Trash bin icon */}
-                    </button>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="7" style={{ textAlign: "center", fontStyle: "italic" }}>
-                  No entries yet
-                </td>
-              </tr>
-            )}
           </tbody>
         </table>
       </header>
