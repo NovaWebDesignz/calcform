@@ -262,13 +262,15 @@ const calculateResult = (option, inputs) => {
     if (savedEntries.length > 0) {
         doc.autoTable({
             startY: 70,
-            head: [["Sl. No.", "Structure", "Measurement", "Required Qty.", "Unit", "Remarks"]],
+            head: [["Sl. No.", "Structure", "Measurement", "No. of Structures", "Required Qty.", "Unit", "Total Concrete Required"]],
             body: savedEntries.map((entry, index) => [
                 index + 1,
                 entry.structure,
                 entry.measurement,
+                entry.quantity,
                 entry.requiredQty,
                 "m³",
+                entry.totalConcreteRequirement
             ]),
             styles: { halign: "center" }, // Center align all content
             headStyles: { halign: "center" }, // Center align headers
