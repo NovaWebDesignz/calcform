@@ -156,22 +156,41 @@ const calculateResult = (option, inputs) => {
       return;
     }
 
+    // Format the measurement details
     const formattedMeasurement = measurementObj 
       ? (Object.entries(measurementObj)
           .map(([key, value]) => `${key}: ${value.value} ${value.unit || ""}`)
           .join(", "))
       : "";
-    
-    const quantityValue = measurementObj.quantity?.value || "N/A";
+
+    // Ensure quantity value is a valid number
+    const quantityValue = parseFloat(measurementObj.quantity?.value) || 0; 
+    if (quantityValue === 0) {
+      console.warn(`Invalid quantity value at index ${index}`);
+    }
+
+    // Ensure required quantity is a valid number
+    const requiredQty = parseFloat(results[index]); 
+    if (isNaN(requiredQty)) {
+      console.warn(`Invalid requiredQty at index ${index}`);
+      return; // Prevent adding invalid entries
+    }
+
+    // Calculate total concrete requirement
+    const totalConcreteRequirement = (requiredQty * quantityValue).toFixed(2);
+
+    // Create new entry object
     const newEntry = {
         structure: selectedOptions[index] || "N/A",
-        measurement: formattedMeasurement, // ✅ Corrected
+        measurement: formattedMeasurement,
         requiredQty: results[index] || "N/A",
-        quantity: quantityValue, // ✅ Store quantity separately
+        quantity: quantityValue, 
         unit: "CBM",
+        totalConcreteRequirement,
     };
 
-    setSavedEntries([newEntry, ...savedEntries]); // Add new entry at the top
+    // Update saved entries (prepend new entry)
+    setSavedEntries([newEntry, ...savedEntries]);
   };
 
   const handleRemoveSavedEntry = (index) => {
@@ -366,7 +385,7 @@ const calculateResult = (option, inputs) => {
                   <td>{entry.quantity || "N/A"}</td>
                   <td>{entry.requiredQty}</td>
                   <td>m³</td>
-                  <td className="saved-column"></td>
+                  <td className="saved-column">{entry.totalConcreteRequirement}</td>
                   <td>
                     <button className="remove-entry-btn" onClick={() => handleRemoveSavedEntry(index)}>
                       <i className="fa fa-trash"></i> {/* Trash bin icon */}
@@ -404,47 +423,56 @@ const calculateResult = (option, inputs) => {
             </tr>
           </thead>
           <tbody>
-            {[...Array(visibleRows)].map((_, index) => (
-              <tr key={index}>
-                <td>
-                  <button className="action-btn remove-btn" onClick={() => handleRemoveRow(index)}>−</button>
-                </td>
-                <td>{index + 1}</td>
-                <td>
-                  <select
-                    className="dropdown-select"
-                    value={selectedOptions[index] || ""}
-                    onChange={(e) => handleOptionChange(index, e.target.value)}
-                  >
-                    <option value="">Select Calculation</option>
-                    <option value="slabs">Slabs, Square Footings, or Walls</option>
-                    <option value="holes">Holes, Pile, Column, or Round Footings</option>
-                    <option value="circular">Circular Slab, Tube, Hollow Cylinder</option>
-                    <option value="curb">Curb and Gutter Barrier</option>
-                    <option value="stairs">Stairs</option>
-                  </select>
-                </td>
-                <td>
-                  {measurements[index] && typeof measurements[index] === "object"
-                    ? Object.entries(measurements[index])
-                      .map(([key, value]) => `${key}: ${value.value} ${value.unit || ""}`) // ✅ Ensure correct structure
-                      .join(", ")
-                    : "Enter measurements"}
-                </td>
-                {/* ✅ New Column for Quantity */}
-                <td>
-                  {measurements[index]?.quantity?.value || "N/A"}
-                </td>
-                <td>{typeof results[index] === 'object' ? JSON.stringify(results[index]) : results[index]}</td>
-                <td className="unit-column">m³</td>
-                <td className="unit-column"></td>
-                <td>
-                  <button className="save-btn" onClick={() => { handleSaveEntry(index); handleCalculateResult(index); }}>
-                    Save
-                  </button>
-                </td>
-              </tr>
-            ))}
+            {[...Array(visibleRows)].map((_, index) => {
+              const measurementObj = measurements[index] || {};
+              const formattedMeasurement = measurementObj && typeof measurementObj === "object"
+                ? Object.entries(measurementObj)
+                    .map(([key, value]) => `${key}: ${value.value} ${value.unit || ""}`)
+                    .join(", ")
+                : "Enter measurements";
+
+              // Ensure quantity value is valid
+              const quantityValue = parseFloat(measurementObj.quantity?.value) || 0;
+
+              // Ensure required quantity is a valid number
+              const requiredQty = parseFloat(results[index]) || 0;
+
+              // Calculate total concrete requirement safely
+              const totalConcreteRequirement = (requiredQty * quantityValue).toFixed(2);
+
+              return (
+                <tr key={index}>
+                  <td>
+                    <button className="action-btn remove-btn" onClick={() => handleRemoveRow(index)}>−</button>
+                  </td>
+                  <td>{index + 1}</td>
+                  <td>
+                    <select
+                      className="dropdown-select"
+                      value={selectedOptions[index] || ""}
+                      onChange={(e) => handleOptionChange(index, e.target.value)}
+                    >
+                      <option value="">Select Calculation</option>
+                      <option value="slabs">Slabs, Square Footings, or Walls</option>
+                      <option value="holes">Holes, Pile, Column, or Round Footings</option>
+                      <option value="circular">Circular Slab, Tube, Hollow Cylinder</option>
+                      <option value="curb">Curb and Gutter Barrier</option>
+                      <option value="stairs">Stairs</option>
+                    </select>
+                  </td>
+                  <td>{formattedMeasurement}</td>
+                  <td>{quantityValue || "N/A"}</td>
+                  <td>{typeof results[index] === 'object' ? JSON.stringify(results[index]) : results[index] || "N/A"}</td>
+                  <td className="unit-column">m³</td>
+                  <td>{isNaN(totalConcreteRequirement) ? "N/A" : totalConcreteRequirement}</td>
+                  <td>
+                    <button className="save-btn" onClick={() => { handleSaveEntry(index); handleCalculateResult(index); }}>
+                      Save
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </header>
