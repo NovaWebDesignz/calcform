@@ -342,7 +342,7 @@ const calculateResult = (option, inputs) => {
             <tr>
               <th>Sl. No.</th>
               <th>Structure</th>
-              <th>Measurement</th>
+              <th className="measurement-column">Measurement</th>
               <th>No. of Structures</th>
               <th>Required Qty.</th>
               <th>Unit</th>
@@ -356,7 +356,7 @@ const calculateResult = (option, inputs) => {
                 <tr key={index}>
                   <td>{index + 1}</td>
                   <td>{entry.structure}</td>
-                  <td>
+                  <td className="measurement-column">
                     {typeof entry.measurement === "object"
                       ? Object.entries(entry.measurement)
                         .map(([key, value]) => `${key}: ${value.value}`)
