@@ -11,7 +11,6 @@ function App() {
   const [popupIndex, setPopupIndex] = useState(null);
   const [measurements, setMeasurements] = useState([]);
   const [results, setResults] = useState([]);
-  const [remarks, setRemarks] = useState([]);
   const [savedEntries, setSavedEntries] = useState([]); // Table for saved entries
 
   // State for customer and site info
@@ -24,7 +23,6 @@ function App() {
     setSelectedOptions([...selectedOptions, ""]);
     setMeasurements([...measurements, ""]);
     setResults([...results, ""]);
-    setRemarks([...remarks, ""]);
   };
 
   const handleRemoveRow = (index) => {
@@ -32,7 +30,6 @@ function App() {
     setSelectedOptions(selectedOptions.filter((_, i) => i !== index));
     setMeasurements(measurements.filter((_, i) => i !== index));
     setResults(results.filter((_, i) => i !== index));
-    setRemarks(remarks.filter((_, i) => i !== index));
   };
 
   const handleOptionChange = (index, value) => {
@@ -139,6 +136,7 @@ const calculateResult = (option, inputs) => {
             unit: item.unit || "" // ✅ Ensure unit is stored
         };
     });
+    
 
     // Update state correctly
     const updatedMeasurements = [...measurements];
@@ -153,22 +151,28 @@ const calculateResult = (option, inputs) => {
   const handleSaveEntry = (index) => {
     const measurementObj = measurements[index];
 
-    const formattedMeasurement = measurementObj 
-        ? Object.entries(measurementObj)
-            .map(([key, value]) => `${key}: ${value.value} ${value.unit || ""}`)
-            .join(", ")
-        : "N/A";
+    if (!measurementObj) {
+      console.error(`No measurement data found for index ${index}`);
+      return;
+    }
 
+    const formattedMeasurement = measurementObj 
+      ? (Object.entries(measurementObj)
+          .map(([key, value]) => `${key}: ${value.value} ${value.unit || ""}`)
+          .join(", "))
+      : "";
+    
+    const quantityValue = measurementObj.quantity?.value || "N/A";
     const newEntry = {
         structure: selectedOptions[index] || "N/A",
         measurement: formattedMeasurement, // ✅ Corrected
         requiredQty: results[index] || "N/A",
+        quantity: quantityValue, // ✅ Store quantity separately
         unit: "CBM",
-        remarks: remarks[index] || "",
     };
 
     setSavedEntries([newEntry, ...savedEntries]); // Add new entry at the top
-};
+  };
 
   const handleRemoveSavedEntry = (index) => {
     const updatedEntries = savedEntries.filter((_, i) => i !== index);
@@ -246,7 +250,6 @@ const calculateResult = (option, inputs) => {
                 entry.measurement,
                 entry.requiredQty,
                 "m³",
-                entry.remarks,
             ]),
             styles: { halign: "center" }, // Center align all content
             headStyles: { halign: "center" }, // Center align headers
@@ -340,9 +343,9 @@ const calculateResult = (option, inputs) => {
               <th>Sl. No.</th>
               <th>Structure</th>
               <th>Measurement</th>
+              <th>No. of Structures</th>
               <th>Required Qty.</th>
               <th>Unit</th>
-              <th>Remarks</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -359,9 +362,9 @@ const calculateResult = (option, inputs) => {
                         .join(", ")
                       : entry.measurement}
                   </td>
+                  <td>{entry.quantity || "N/A"}</td>
                   <td>{entry.requiredQty}</td>
                   <td>m³</td>
-                  <td>{entry.remarks}</td>
                   <td>
                     <button className="remove-entry-btn" onClick={() => handleRemoveSavedEntry(index)}>
                       <i className="fa fa-trash"></i> {/* Trash bin icon */}
@@ -391,9 +394,9 @@ const calculateResult = (option, inputs) => {
               <th>SI. No.</th>
               <th>Concrete Structure</th>
               <th>Measurements</th>
+              <th>No. of Structure</th> {/* ✅ New column */}
               <th>Required Qty.</th>
-              <th>Unit</th>
-              <th>Remarks</th>
+              <th className="unit-column">Unit</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -425,24 +428,12 @@ const calculateResult = (option, inputs) => {
                       .join(", ")
                     : "Enter measurements"}
                 </td>
-
-
-
-                <td>{typeof results[index] === 'object' ? JSON.stringify(results[index]) : results[index]}</td>
-                <td>m³</td>
+                {/* ✅ New Column for Quantity */}
                 <td>
-                  <input
-                    type="text"
-                    placeholder="Enter remarks"
-                    className="remarks-input"
-                    value={remarks[index] || ""}
-                    onChange={(e) => {
-                      const newRemarks = [...remarks];
-                      newRemarks[index] = e.target.value;
-                      setRemarks(newRemarks);
-                    }}
-                  /> 
+                  {measurements[index]?.quantity?.value || "N/A"}
                 </td>
+                <td>{typeof results[index] === 'object' ? JSON.stringify(results[index]) : results[index]}</td>
+                <td className="unit-column">m³</td>
                 <td>
                   <button className="save-btn" onClick={() => { handleSaveEntry(index); handleCalculateResult(index); }}>
                     Save

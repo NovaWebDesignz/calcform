@@ -18,6 +18,7 @@ const convertToMeters = (value, unit) => {
 
 const CalculationPopup = ({ selectedOption, onSave, onClose, calculateFor, onCalculateForChange }) => {
   const [inputs, setInputs] = useState({});
+  const [quantity, setQuantity] = useState(1); // ✅ Define quantity state
   const [calculateForOption, setCalculateForOption] = useState(() => {
     if (calculateFor) return calculateFor;
     if (selectedOption === "slabs") return "slab";
@@ -139,6 +140,13 @@ const handleSave = () => {
         return;
     }
 
+    // ✅ Ensure quantity is always included in the saved data
+    convertedInputs.push({
+      label: "Quantity",
+      value: quantity, // ✅ Use state variable 'quantity'
+      unit: "", // Quantity typically doesn't have a unit
+    });
+
     onSave(convertedInputs);
     onClose();
 };
@@ -239,9 +247,15 @@ const imageMap = {
           </div>
         ))}
 
+        {/* ✅ Quantity Input */}
         <div className="input-group">
-          <label>Quantity</label>
-          <span>1</span>
+          <label>Quantity:</label>
+          <input
+            type="number"
+            value={quantity}
+            onChange={(e) => setQuantity(parseInt(e.target.value) || 1)}
+            min="1"
+          />
         </div>
 
         <div className="button-group">

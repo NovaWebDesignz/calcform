@@ -51,6 +51,13 @@ h1 {
   background-color: #f1f1f1;
 }
 
+.calculator-table th.unit-column,
+.calculator-table td.unit-column {
+  width: 40px; /* Adjust width as needed */
+  min-width: 30px; /* Prevent shrinking too much */
+  text-align: center;
+}
+
 .saved-entries-table {
   width: 100%;
   border-collapse: collapse;
