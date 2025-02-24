@@ -44,7 +44,7 @@ function App() {
       setPopupIndex(index);
     }, 50);
   };
-
+ 
   const getValue = (obj, key) => (obj?.[key]?.value !== undefined ? obj[key].value : 0);
 
 const calculateResult = (option, inputs) => {
