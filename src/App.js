@@ -346,6 +346,7 @@ const calculateResult = (option, inputs) => {
               <th>No. of Structures</th>
               <th>Required Qty.</th>
               <th>Unit</th>
+              <th className="saved-column">Total Concrete Requirement</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -365,6 +366,7 @@ const calculateResult = (option, inputs) => {
                   <td>{entry.quantity || "N/A"}</td>
                   <td>{entry.requiredQty}</td>
                   <td>m³</td>
+                  <td className="saved-column"></td>
                   <td>
                     <button className="remove-entry-btn" onClick={() => handleRemoveSavedEntry(index)}>
                       <i className="fa fa-trash"></i> {/* Trash bin icon */}
@@ -397,6 +399,7 @@ const calculateResult = (option, inputs) => {
               <th>No. of Structure</th> {/* ✅ New column */}
               <th>Required Qty.</th>
               <th className="unit-column">Unit</th>
+              <th>Total Concrete Requirement</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -434,6 +437,7 @@ const calculateResult = (option, inputs) => {
                 </td>
                 <td>{typeof results[index] === 'object' ? JSON.stringify(results[index]) : results[index]}</td>
                 <td className="unit-column">m³</td>
+                <td className="unit-column"></td>
                 <td>
                   <button className="save-btn" onClick={() => { handleSaveEntry(index); handleCalculateResult(index); }}>
                     Save

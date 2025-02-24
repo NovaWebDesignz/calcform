@@ -61,13 +61,14 @@ h1 {
 .saved-entries-table {
   width: 100%;
   border-collapse: collapse;
+  margin: auto;
   margin-top: 50px;
   margin-bottom: 10px;
 }
 
 .saved-entries-table th, .saved-entries-table td {
   border: 1px solid #000;
-  padding: 1px;
+  padding: 12px;
   text-align: center;
   font-size: 16px;
 }
@@ -77,7 +78,12 @@ h1 {
   font-weight: bold;
 }
 
-
+.saved-entries-table th.saved-column,
+.saved-entries-table td.saved-column {
+  width: 40px; /* Adjust width as needed */
+  min-width: 30px; /* Prevent shrinking too much */
+  text-align: center;
+}
 
 
 /* General Button Styling - Silver Polished Look */
