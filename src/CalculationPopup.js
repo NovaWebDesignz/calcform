@@ -173,7 +173,7 @@ const imageMap = {
   return (
     <div className="popup-overlay">
       <div className="popup">
-        <h2>{selectedOption} Measurements</h2>
+        <h2>Measurements</h2>
 
         <div className="input-group">
           <label>Concrete Structure</label>
