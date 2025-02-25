@@ -15,8 +15,10 @@ function App() {
 
   // State for customer and site info
   const [customerName, setCustomerName] = useState("");
-  const [customerContact, setCustomerContact] = useState("");
-  const [siteLocation, setSiteLocation] = useState("");
+  const [projectName, setProjectName] = useState("");
+  const [customerLocation, setCustomerLocation] = useState("");
+  const [typeofWork, setTypeofWork] = useState("");
+  const [siteDistance, setSiteDistance] = useState("");
 
   const handleAddRow = () => {
     setVisibleRows((prev) => prev + 1);
@@ -200,12 +202,12 @@ const calculateResult = (option, inputs) => {
 
   const handleCustomerSave = () => {
     // Save customer data (can be stored in local state or backend)
-    console.log("Customer Saved:", { name: customerName, contact: customerContact });
+    console.log("Customer Saved:", { name: customerName, project: projectName, contact: customerLocation });
   };
 
   const handleSiteSave = () => {
     // Save site location data (can be stored in local state or backend)
-    console.log("Site Saved:", siteLocation);
+    console.log("Site Saved:", { work: typeofWork, distance: siteDistance });
   };
 
   const handleCalculateResult = (index, measurementData = null) => {
@@ -237,31 +239,36 @@ const calculateResult = (option, inputs) => {
     const doc = new jsPDF();
 
     // Title
-    doc.setFontSize(18);
+    doc.setFontSize(23);
     doc.text("Concrete Calculator Report", 14, 20);
-
+    
     // Customer Information
     doc.setFontSize(14);
-    doc.text("Customer Details:", 14, 30);
     doc.setFontSize(12);
 
     // Define alignment positions
     const labelX = 14;
-    const valueX = 50; // Adjust this value for better alignment
+    const valueX = 60; // Adjust this value for better alignment
 
-    doc.text("Name:", labelX, 40);
+    doc.text("Client Name:", labelX, 40);
     doc.text(`${customerName || "N/A"}`, valueX, 40);
 
-    doc.text("Contact:", labelX, 50);
-    doc.text(`${customerContact || "N/A"}`, valueX, 50);
+    doc.text("Project Name:", labelX, 50);
+    doc.text(`${projectName || "N/A"}`, valueX, 50);
 
-    doc.text("Site Location:", labelX, 60);
-    doc.text(`${siteLocation || "N/A"}`, valueX, 60);
+    doc.text("Location:", labelX, 60);
+    doc.text(`${customerLocation || "N/A"}`, valueX, 60);
+
+    doc.text("Type of Work:", labelX, 70);
+    doc.text(`${typeofWork || "N/A"}`, valueX, 70);
+
+    doc.text("Distance (one way):", labelX, 80);
+    doc.text(`${siteDistance || "N/A"}`, valueX, 80);
 
     // Saved Entries Table
     if (savedEntries.length > 0) {
         doc.autoTable({
-            startY: 70,
+            startY: 100,
             head: [["Sl. No.", "Structure", "Measurement", "No. of Structures", "Required Qty.", "Unit", "Total Concrete Required"]],
             body: savedEntries.map((entry, index) => [
                 index + 1,
@@ -301,8 +308,9 @@ const calculateResult = (option, inputs) => {
         <table className="customer-table">
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Contact</th>
+              <th>Client Name</th>
+              <th>Project Name</th>
+              <th>Location</th>
             </tr>
           </thead>
           <tbody>
@@ -320,9 +328,18 @@ const calculateResult = (option, inputs) => {
                 <input
                   className="remarks-input customer-input"
                   type="text"
-                  placeholder="Enter Contact"
-                  value={customerContact}
-                  onChange={(e) => setCustomerContact(e.target.value)}
+                  placeholder="Enter Project Name"
+                  value={projectName}
+                  onChange={(e) => setProjectName(e.target.value)}
+                />
+              </td>
+              <td>
+                <input
+                  className="remarks-input customer-input"
+                  type="text"
+                  placeholder="Enter Location"
+                  value={customerLocation}
+                  onChange={(e) => setCustomerLocation(e.target.value)}
                 />
               </td>
               <td>
@@ -336,7 +353,8 @@ const calculateResult = (option, inputs) => {
         <table className="site-table">
           <thead>
             <tr>
-              <th>Site Location</th>
+              <th>Type of Work</th>
+              <th>Distance-oneway</th>
             </tr>
           </thead>
           <tbody>
@@ -345,9 +363,18 @@ const calculateResult = (option, inputs) => {
                 <input
                   className="remarks-input site-input"
                   type="text"
-                  placeholder="Enter Site Location"
-                  value={siteLocation}
-                  onChange={(e) => setSiteLocation(e.target.value)}
+                  placeholder="Enter Type of Work"
+                  value={typeofWork}
+                  onChange={(e) => setTypeofWork(e.target.value)}
+                />
+              </td>
+              <td>
+                <input
+                  className="remarks-input site-input"
+                  type="text"
+                  placeholder="Enter Distance (one way)"
+                  value={siteDistance}
+                  onChange={(e) => setSiteDistance(e.target.value)}
                 />
               </td>
               <td>
