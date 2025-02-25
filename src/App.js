@@ -367,7 +367,7 @@ const calculateResult = (option, inputs) => {
               <th>No. of Structures</th>
               <th>Required Qty.</th>
               <th>Unit</th>
-              <th className="saved-column">Total Concrete Requirement</th>
+              <th>Total Concrete Volume Required</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -420,7 +420,7 @@ const calculateResult = (option, inputs) => {
               <th>No. of Structure</th> {/* ✅ New column */}
               <th>Required Qty.</th>
               <th className="unit-column">Unit</th>
-              <th>Total Concrete Requirement</th>
+              <th>Total Concrete Volume Required</th>
               <th>Action</th>
             </tr>
           </thead>
