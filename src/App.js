@@ -161,8 +161,12 @@ const calculateResult = (option, inputs) => {
     // Format the measurement details
     const formattedMeasurement = measurementObj 
       ? (Object.entries(measurementObj)
-          .map(([key, value]) => `${key}: ${value.value} ${value.unit || ""}`)
-          .join(", "))
+        .map(([key, value]) => 
+            `${key.charAt(0).toUpperCase() + key.slice(1)}: ${value.value} ${
+              value.unit ? value.unit.charAt(0).toUpperCase() + value.unit.slice(1) : ""
+            }`
+        )
+        .join(", "))
       : "";
 
     // Ensure quantity value is a valid number
@@ -407,7 +411,10 @@ const calculateResult = (option, inputs) => {
                   <td className="measurement-column">
                     {typeof entry.measurement === "object"
                       ? Object.entries(entry.measurement)
-                        .map(([key, value]) => `${key}: ${value.value}`)
+                      .map(([key, value]) => 
+                        `${key.charAt(0).toUpperCase() + key.slice(1)}: ${value.value} ${
+                          value.unit ? value.unit.charAt(0).toUpperCase() + value.unit.slice(1) : ""
+                        }`)
                         .join(", ")
                       : entry.measurement}
                   </td>
@@ -456,7 +463,10 @@ const calculateResult = (option, inputs) => {
               const measurementObj = measurements[index] || {};
               const formattedMeasurement = measurementObj && typeof measurementObj === "object"
                 ? Object.entries(measurementObj)
-                    .map(([key, value]) => `${key}: ${value.value} ${value.unit || ""}`)
+                .map(([key, value]) => 
+                    `${key.charAt(0).toUpperCase() + key.slice(1)}: ${value.value} ${
+                      value.unit ? value.unit.charAt(0).toUpperCase() + value.unit.slice(1) : ""
+                    }`)
                     .join(", ")
                 : "Enter measurements";
 

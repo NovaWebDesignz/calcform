@@ -128,8 +128,12 @@ const handleSave = () => {
         if (!input.convertedValue || !input.unit) { // Ensure unit is present
             isValid = false;
         }
+
+        // ✅ Capitalize first letter of each label before saving
+        const capitalizedLabel = key.charAt(0).toUpperCase() + key.slice(1);
+
         convertedInputs.push({
-            label: key,
+            label: capitalizedLabel, //Now stored as "Length", "Width", etc.
             value: input.convertedValue,
             unit: input.unit, // ✅ Store unit properly
         });
@@ -146,6 +150,9 @@ const handleSave = () => {
       value: quantity, // ✅ Use state variable 'quantity'
       unit: "", // Quantity typically doesn't have a unit
     });
+
+    // Debugging: Check if labels are capitalized before sending data
+    console.log("Saved Data:", convertedInputs);
 
     onSave(convertedInputs);
     onClose();
