@@ -155,7 +155,7 @@ const calculateResult = (option, inputs) => {
 
     if (!measurementObj) {
       console.error(`No measurement data found for index ${index}`);
-      return;
+      return; 
     }
 
     // Format the measurement details
