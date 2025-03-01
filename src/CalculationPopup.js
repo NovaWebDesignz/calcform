@@ -255,7 +255,7 @@ const imageMap = {
         ))}
 
         {/* ✅ Quantity Input */}
-        <div className="input-group">
+        <div className="quantity-group">
           <label>Quantity:</label>
           <input
             type="number"
